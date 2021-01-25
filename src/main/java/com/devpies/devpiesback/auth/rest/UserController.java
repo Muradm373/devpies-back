@@ -48,6 +48,18 @@ public class UserController {
         return login(username, password);
     }
 
+    @PostMapping("/register-admin")
+    String registerAdmin(
+            @RequestParam("username") final String username,
+            @RequestParam("password") final String password) {
+        User user = new User(username, username, password);
+        user.setRoles(Arrays.asList(roleRepository.findByName(Roles.ADMIN.name())));
+        users
+                .save(user);
+
+        return login(username, password);
+    }
+
 
     @PostMapping("/login")
     String login(
