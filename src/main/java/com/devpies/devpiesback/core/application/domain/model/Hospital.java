@@ -1,10 +1,12 @@
 package com.devpies.devpiesback.core.application.domain.model;
 
 import com.devpies.devpiesback.auth.application.domain.model.User;
+import com.devpies.devpiesback.auth.application.domain.model.roles.Doctor;
 import com.devpies.devpiesback.auth.application.domain.model.roles.Representative;
 import org.joda.time.DateTime;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Entity
 @Table(name="hospitals")
@@ -15,7 +17,7 @@ public class Hospital {
     private Long id;
 
     @JoinTable(
-            name = "hospital_patient",
+            name = "hospital_representative",
             joinColumns = @JoinColumn(
                     name = "hospital_id", referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(
@@ -25,6 +27,15 @@ public class Hospital {
     private String phoneNumber;
     int rating;
     String website;
+
+    @OneToMany
+    @JoinTable(
+            name = "hospital_doctors",
+            joinColumns = @JoinColumn(
+                    name = "hospital_id", referencedColumnName = "id"),
+            inverseJoinColumns = @JoinColumn(
+                    name = "doctor_id", referencedColumnName = "id"))
+    private List<Doctor> doctors;
 
     public Representative getRepresentative() {
         return representative;

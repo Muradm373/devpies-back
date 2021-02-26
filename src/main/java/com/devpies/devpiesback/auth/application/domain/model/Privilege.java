@@ -4,12 +4,13 @@ import com.sun.istack.NotNull;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
 @Entity
-public class Privilege {
+public class Privilege implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)

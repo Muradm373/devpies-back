@@ -27,6 +27,10 @@ import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
 
+
+import java.util.ArrayList;
+import java.util.List;
+
 import static java.util.Objects.requireNonNull;
 import static lombok.AccessLevel.PRIVATE;
 import static org.springframework.http.HttpStatus.FORBIDDEN;
@@ -37,8 +41,13 @@ import static org.springframework.security.config.http.SessionCreationPolicy.STA
 @EnableGlobalMethodSecurity(prePostEnabled=true)
 @FieldDefaults(level = PRIVATE, makeFinal = true)
 class SecurityConfig extends WebSecurityConfigurerAdapter {
-    private static final RequestMatcher PUBLIC_URLS = new OrRequestMatcher(
-            new AntPathRequestMatcher("/auth/**")
+    private static final RequestMatcher PUBLIC_URLS = new OrRequestMatcher(new AntPathRequestMatcher("/auth/**"),
+            new AntPathRequestMatcher("/swagger-resources"),
+            new AntPathRequestMatcher("/swagger-resources/**"),
+            new AntPathRequestMatcher("/v2/api-docs"),
+            new AntPathRequestMatcher( "/configuration/ui"),
+            new AntPathRequestMatcher( "/configuration/security"),
+            new AntPathRequestMatcher("/swagger-ui.html")
     );
     private static final RequestMatcher PROTECTED_URLS = new NegatedRequestMatcher(PUBLIC_URLS);
 

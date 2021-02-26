@@ -1,6 +1,7 @@
 package com.devpies.devpiesback.auth.application.domain.model.roles;
 
 import com.devpies.devpiesback.auth.application.domain.model.User;
+import com.devpies.devpiesback.core.application.domain.model.Hospital;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 
@@ -34,6 +35,15 @@ public class Doctor {
             inverseJoinColumns = @JoinColumn(
                     name = "user_id", referencedColumnName = "id"))
     private User user;
+
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinTable(
+            name = "hospital_doctor",
+            joinColumns = @JoinColumn(
+                    name = "doctor_id", referencedColumnName = "id"),
+            inverseJoinColumns = @JoinColumn(
+                    name = "hospital_id", referencedColumnName = "id"))
+    private Hospital hospital;
 
     public Doctor(Doctor doctor, User user) {
         this.phone = doctor.phone;
@@ -89,5 +99,13 @@ public class Doctor {
 
     public void setUser(User user) {
         this.user = user;
+    }
+
+    public Hospital getHospital() {
+        return hospital;
+    }
+
+    public void setHospital(Hospital hospital) {
+        this.hospital = hospital;
     }
 }
