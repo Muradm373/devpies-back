@@ -1,10 +1,12 @@
 package com.devpies.devpiesback.auth.application.domain.model.roles;
 
 import com.devpies.devpiesback.auth.application.domain.model.User;
+import com.devpies.devpiesback.core.application.domain.model.Appointment;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Entity
 @AllArgsConstructor
@@ -33,6 +35,15 @@ public class Patient {
             inverseJoinColumns = @JoinColumn(
                     name = "user_id", referencedColumnName = "id"))
     private User user;
+
+    @OneToMany(cascade = CascadeType.ALL)
+    @JoinTable(
+            name = "patient_appointments",
+            joinColumns = @JoinColumn(
+                    name = "patient_id", referencedColumnName = "id"),
+            inverseJoinColumns = @JoinColumn(
+                    name = "appointment_id", referencedColumnName = "id"))
+    private List<Appointment> appointments;
 
     public String getPhoneNumber() {
         return phoneNumber;

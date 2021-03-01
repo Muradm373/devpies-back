@@ -1,11 +1,13 @@
 package com.devpies.devpiesback.auth.application.domain.model.roles;
 
 import com.devpies.devpiesback.auth.application.domain.model.User;
+import com.devpies.devpiesback.core.application.domain.model.Appointment;
 import com.devpies.devpiesback.core.application.domain.model.Hospital;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Entity
 @AllArgsConstructor
@@ -44,6 +46,15 @@ public class Doctor {
             inverseJoinColumns = @JoinColumn(
                     name = "hospital_id", referencedColumnName = "id"))
     private Hospital hospital;
+
+    @OneToMany(cascade = CascadeType.ALL)
+    @JoinTable(
+            name = "doctor_appointments",
+            joinColumns = @JoinColumn(
+                    name = "doctor_id", referencedColumnName = "id"),
+            inverseJoinColumns = @JoinColumn(
+                    name = "appointment_id", referencedColumnName = "id"))
+    private List<Appointment> appointments;
 
     public Doctor(Doctor doctor, User user) {
         this.phone = doctor.phone;
@@ -107,5 +118,13 @@ public class Doctor {
 
     public void setHospital(Hospital hospital) {
         this.hospital = hospital;
+    }
+
+    public List<Appointment> getAppointments() {
+        return appointments;
+    }
+
+    public void setAppointments(List<Appointment> appointments) {
+        this.appointments = appointments;
     }
 }

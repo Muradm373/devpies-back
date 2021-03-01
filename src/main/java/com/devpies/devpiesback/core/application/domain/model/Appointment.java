@@ -19,10 +19,28 @@ import java.util.List;
 public class Appointment {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
     @Column(name="id")
+    private Long id;
+
+
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinTable(
+            name = "user_appointment",
+            joinColumns = @JoinColumn(
+                    name = "appointment_id", referencedColumnName = "id"),
+            inverseJoinColumns = @JoinColumn(
+                    name = "user_id", referencedColumnName = "id"))
     private User patient;
+
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinTable(
+            name = "doctor_appointment",
+            joinColumns = @JoinColumn(
+                    name = "appointment_id", referencedColumnName = "id"),
+            inverseJoinColumns = @JoinColumn(
+                    name = "doctor_id", referencedColumnName = "id"))
     private User doctor;
+
     @JsonFormat(pattern="yyyy-MM-dd HH:mm")
     private DateTime dateOfAppointment;
     private List<String> symptoms;
