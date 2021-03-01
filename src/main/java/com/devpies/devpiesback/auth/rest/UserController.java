@@ -3,14 +3,18 @@ package com.devpies.devpiesback.auth.rest;
 
 import com.devpies.devpiesback.auth.application.domain.model.Privilege;
 import com.devpies.devpiesback.auth.application.domain.model.Role;
+import com.devpies.devpiesback.auth.application.domain.model.roles.Patient;
+import com.devpies.devpiesback.auth.application.domain.model.roles.Representative;
 import com.devpies.devpiesback.auth.application.domain.repository.RoleRepository;
 import com.devpies.devpiesback.auth.application.service.UserAuthenticationService;
 import com.devpies.devpiesback.auth.application.service.UserCrudService;
 import com.devpies.devpiesback.auth.application.domain.model.User;
 import com.devpies.devpiesback.common.config.Roles;
+import com.devpies.devpiesback.core.application.domain.repository.PatientRepository;
 import lombok.AllArgsConstructor;
 import lombok.NonNull;
 import lombok.experimental.FieldDefaults;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -36,14 +40,17 @@ public class UserController {
     UserCrudService users;
     @NonNull RoleRepository roleRepository;
 
+    @Autowired
+    PatientRepository patientRepository;
+
     @PostMapping("/register")
     String register(
             @RequestParam("username") final String username,
-            @RequestParam("password") final String password) {
+            @RequestParam("password") final String password,  @RequestBody Patient patient) {
         User user = new User(username, username, password);
         user.setRoles(Arrays.asList(roleRepository.findByName(Roles.USER.name())));
-        users
-            .save(user);
+        User savedUser = users.save(user);
+        Patient savedPatient = patientRepository.save(new Patient(patient, savedUser));
 
         return login(username, password);
     }

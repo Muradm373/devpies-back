@@ -1,5 +1,6 @@
 package com.devpies.devpiesback.core.rest.services.impl;
 
+import com.devpies.devpiesback.auth.application.domain.model.User;
 import com.devpies.devpiesback.auth.application.domain.model.roles.Patient;
 import com.devpies.devpiesback.core.application.domain.dto.PatientDTO;
 import com.devpies.devpiesback.core.application.domain.repository.PatientRepository;
@@ -23,6 +24,10 @@ public class PatientService {
                 .findAll()
                 .stream()
                 .map(this::convertToPatientDTO).collect(Collectors.toList()));
+    }
+
+    public Patient findPatientByUser(User user){
+        return patientRepository.findByUser(user).get();
     }
 
     private PatientDTO convertToPatientDTO(Patient patient){

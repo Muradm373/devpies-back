@@ -5,15 +5,14 @@ import com.devpies.devpiesback.auth.application.domain.model.roles.Doctor;
 import com.devpies.devpiesback.auth.application.domain.model.roles.Patient;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.*;
-import org.joda.time.DateTime;
+import org.apache.tomcat.jni.Local;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 import java.util.List;
 
-@ToString
 @Entity
 @Table(name="appointments")
-@Builder
 @AllArgsConstructor
 @NoArgsConstructor
 public class Appointment {
@@ -30,7 +29,7 @@ public class Appointment {
                     name = "appointment_id", referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(
                     name = "user_id", referencedColumnName = "id"))
-    private User patient;
+    private Patient patient;
 
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinTable(
@@ -39,10 +38,10 @@ public class Appointment {
                     name = "appointment_id", referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(
                     name = "doctor_id", referencedColumnName = "id"))
-    private User doctor;
+    private Doctor doctor;
 
     @JsonFormat(pattern="yyyy-MM-dd HH:mm")
-    private DateTime dateOfAppointment;
+    private LocalDateTime dateOfAppointment;
     @ElementCollection
     private List<String> symptoms;
     @ElementCollection
@@ -54,7 +53,7 @@ public class Appointment {
 
     private String rejectionDescription;
 
-    public Appointment(User patient, User doctor, DateTime dateOfAppointment, List<String> symptoms,
+    public Appointment(Patient patient, Doctor doctor, LocalDateTime dateOfAppointment, List<String> symptoms,
                        List<String> bodyParts, String description, String questionnaire, AppointmentStatus status) {
         this.patient = patient;
         this.doctor = doctor;
@@ -74,27 +73,27 @@ public class Appointment {
         this.id = id;
     }
 
-    public User getPatient() {
+    public Patient getPatient() {
         return patient;
     }
 
-    public void setPatient(User patient) {
+    public void setPatient(Patient patient) {
         this.patient = patient;
     }
 
-    public User getDoctor() {
+    public Doctor getDoctor() {
         return doctor;
     }
 
-    public void setDoctor(User doctor) {
+    public void setDoctor(Doctor doctor) {
         this.doctor = doctor;
     }
 
-    public DateTime getDateOfAppointment() {
+    public LocalDateTime getDateOfAppointment() {
         return dateOfAppointment;
     }
 
-    public void setDateOfAppointment(DateTime dateOfAppointment) {
+    public void setDateOfAppointment(LocalDateTime dateOfAppointment) {
         this.dateOfAppointment = dateOfAppointment;
     }
 

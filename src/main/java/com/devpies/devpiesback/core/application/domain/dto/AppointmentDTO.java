@@ -4,20 +4,24 @@ import com.devpies.devpiesback.auth.application.domain.model.User;
 import com.devpies.devpiesback.auth.application.domain.model.roles.Doctor;
 import com.devpies.devpiesback.auth.application.domain.model.roles.Patient;
 import com.devpies.devpiesback.core.application.domain.model.AppointmentStatus;
-import org.joda.time.DateTime;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import org.apache.tomcat.jni.Local;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 public class AppointmentDTO {
     Long doctorId;
     User patient;
     Long id;
-    DateTime dateOfAppointment;
+    @JsonFormat(pattern="yyyy-MM-dd HH:mm")
+    LocalDateTime dateOfAppointment;
     List<String> symptoms;
     List<String> bodyParts;
     AppointmentStatus status;
     String description;
     String questionnaire;
+
 
     public Long getDoctorId() {
         return doctorId;
@@ -67,11 +71,11 @@ public class AppointmentDTO {
         this.id = id;
     }
 
-    public DateTime getDateOfAppointment() {
+    public LocalDateTime getDateOfAppointment() {
         return dateOfAppointment;
     }
 
-    public void setDateOfAppointment(DateTime dateOfAppointment) {
+    public void setDateOfAppointment(LocalDateTime dateOfAppointment) {
         this.dateOfAppointment = dateOfAppointment;
     }
 

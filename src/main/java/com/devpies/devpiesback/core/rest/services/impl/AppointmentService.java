@@ -2,18 +2,20 @@ package com.devpies.devpiesback.core.rest.services.impl;
 
 import com.devpies.devpiesback.auth.application.domain.model.User;
 import com.devpies.devpiesback.auth.application.domain.model.roles.Doctor;
+import com.devpies.devpiesback.auth.application.domain.model.roles.Patient;
 import com.devpies.devpiesback.core.application.domain.dto.AppointmentDTO;
 import com.devpies.devpiesback.core.application.domain.dto.DoctorDTO;
 import com.devpies.devpiesback.core.application.domain.model.Appointment;
 import com.devpies.devpiesback.core.application.domain.model.AppointmentStatus;
 import com.devpies.devpiesback.core.application.domain.repository.AppointmentRepository;
 import com.devpies.devpiesback.core.rest.services.interfaces.IAppointmentService;
-import org.joda.time.DateTime;
+import org.apache.tomcat.jni.Local;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.convention.MatchingStrategies;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -37,7 +39,7 @@ public class AppointmentService implements IAppointmentService {
     }
 
     @Override
-    public List<AppointmentDTO> getListOfPatientsAppointments(User user) {
+    public List<AppointmentDTO> getListOfPatientsAppointments(Patient user) {
         return appointmentRepository
                 .getAllByPatient(user)
                 .stream()
@@ -46,7 +48,7 @@ public class AppointmentService implements IAppointmentService {
     }
 
     @Override
-    public List<AppointmentDTO> getListOfDoctorsAppointments(User user) {
+    public List<AppointmentDTO> getListOfDoctorsAppointments(Doctor user) {
         return appointmentRepository
                 .getAllByDoctor(user)
                 .stream()
@@ -64,7 +66,7 @@ public class AppointmentService implements IAppointmentService {
     }
 
     @Override
-    public List<AppointmentDTO> getListOfPatientsAppointmentsByStatus(User user, AppointmentStatus status) {
+    public List<AppointmentDTO> getListOfPatientsAppointmentsByStatus(Patient user, AppointmentStatus status) {
         return appointmentRepository
                 .getAllByPatientAndStatus(user, status)
                 .stream()
@@ -73,7 +75,7 @@ public class AppointmentService implements IAppointmentService {
     }
 
     @Override
-    public List<AppointmentDTO> getListOfDoctorsAppointmentsByStatus(User user, AppointmentStatus status) {
+    public List<AppointmentDTO> getListOfDoctorsAppointmentsByStatus(Doctor user, AppointmentStatus status) {
         return appointmentRepository
                 .getAllByDoctorAndStatus(user, status)
                 .stream()
@@ -87,18 +89,18 @@ public class AppointmentService implements IAppointmentService {
     }
 
     @Override
-    public Appointment getAppointmentOfPatientById(User user, Long id) {
+    public Appointment getAppointmentOfPatientById(Patient user, Long id) {
         return appointmentRepository.findByIdAndPatient(id, user).get();
     }
 
     @Override
-    public Appointment getAppointmentOfDoctorById(User user, Long id) {
+    public Appointment getAppointmentOfDoctorById(Doctor user, Long id) {
         return appointmentRepository.findByIdAndDoctor(id, user).get();
     }
 
     @Override
-    public AppointmentDTO createAppointment(User from, User to, DateTime dateTime, List<String> symptoms,
-                                                  List<String> bodyParts, String description, String questionnaire) {
+    public AppointmentDTO createAppointment(Patient from, Doctor to, LocalDateTime dateTime, List<String> symptoms,
+                                            List<String> bodyParts, String description, String questionnaire) {
         Appointment appointment = new Appointment(from, to, dateTime, symptoms, bodyParts,
                 description, questionnaire, AppointmentStatus.PENDING);
 
@@ -107,7 +109,7 @@ public class AppointmentService implements IAppointmentService {
     }
 
     @Override
-    public AppointmentDTO cancelAppointment(User user, Long appointmentId) {
+    public AppointmentDTO cancelAppointment(Patient user, Long appointmentId) {
         Optional<Appointment> appointment = appointmentRepository.findByIdAndPatient(appointmentId, user);
 
         if (!appointment.isPresent())
@@ -122,7 +124,7 @@ public class AppointmentService implements IAppointmentService {
     }
 
     @Override
-    public AppointmentDTO rejectAppointment(User user, Long appointmentId, String reason) {
+    public AppointmentDTO rejectAppointment(Doctor user, Long appointmentId, String reason) {
         Optional<Appointment> appointment = appointmentRepository.findByIdAndDoctor(appointmentId, user);
 
         if (!appointment.isPresent())
@@ -138,7 +140,7 @@ public class AppointmentService implements IAppointmentService {
     }
 
     @Override
-    public AppointmentDTO acceptAppointment(User user, Long appointmentId) {
+    public AppointmentDTO acceptAppointment(Doctor user, Long appointmentId) {
         Optional<Appointment> appointment = appointmentRepository.findByIdAndDoctor(appointmentId, user);
 
         if (!appointment.isPresent())
@@ -153,7 +155,7 @@ public class AppointmentService implements IAppointmentService {
     }
 
     @Override
-    public AppointmentDTO endAppointment(User user, Long appointmentId, String result) {
+    public AppointmentDTO endAppointment(Doctor user, Long appointmentId, String result) {
         Optional<Appointment> appointment = appointmentRepository.findByIdAndDoctor(appointmentId, user);
 
         if (!appointment.isPresent())
@@ -169,7 +171,7 @@ public class AppointmentService implements IAppointmentService {
     }
 
     @Override
-    public AppointmentDTO changeDateOfAppointment(User user, Long appointmentId, DateTime newDateTime) {
+    public AppointmentDTO changeDateOfAppointment(Patient user, Long appointmentId, LocalDateTime newDateTime) {
         Optional<Appointment> appointment = appointmentRepository.findByIdAndPatient(appointmentId, user);
 
         if (!appointment.isPresent())
@@ -184,7 +186,7 @@ public class AppointmentService implements IAppointmentService {
     }
 
     @Override
-    public AppointmentDTO changeDetailsOfAppointment(User user, Long appointmentId, List<String> symptoms, List<String> bodyParts, String description) {
+    public AppointmentDTO changeDetailsOfAppointment(Patient user, Long appointmentId, List<String> symptoms, List<String> bodyParts, String description) {
         Optional<Appointment> appointment = appointmentRepository.findByIdAndPatient(appointmentId, user);
 
         if (!appointment.isPresent())

@@ -44,6 +44,7 @@ class SecurityConfig extends WebSecurityConfigurerAdapter {
     private static final RequestMatcher PUBLIC_URLS = new OrRequestMatcher(new AntPathRequestMatcher("/auth/**"),
             new AntPathRequestMatcher("/swagger-resources"),
             new AntPathRequestMatcher("/swagger-resources/**"),
+            new AntPathRequestMatcher("/webjars/springfox-swagger-ui/**"),
             new AntPathRequestMatcher("/v2/api-docs"),
             new AntPathRequestMatcher( "/configuration/ui"),
             new AntPathRequestMatcher( "/configuration/security"),

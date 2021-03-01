@@ -45,6 +45,15 @@ public class Patient {
                     name = "appointment_id", referencedColumnName = "id"))
     private List<Appointment> appointments;
 
+    public Patient(Patient patient, User user) {
+        this.appointments = List.of();
+        this.homePhoneNumber = patient.homePhoneNumber;
+        this.name = patient.name;
+        this.surname = patient.surname;
+        this.phoneNumber = patient.homePhoneNumber;
+        this.user = user;
+    }
+
     public String getPhoneNumber() {
         return phoneNumber;
     }

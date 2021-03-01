@@ -91,4 +91,5 @@ public class RepresentativeController {
         Representative representative = representativeService.findByUser(user);
         return new ResponseEntity<>(hospitalService.getAllHospitalsDTO(representative), HttpStatus.OK);
     }
+
 }

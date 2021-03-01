@@ -13,12 +13,12 @@ import java.util.Optional;
 
 @Repository
 public interface AppointmentRepository extends JpaRepository<Appointment, Long> {
-    List<Appointment> getAllByPatient(User patient);
-    List<Appointment> getAllByDoctor(User doctor);
+    List<Appointment> getAllByPatient(Patient patient);
+    List<Appointment> getAllByDoctor(Doctor doctor);
     List<Appointment> getAllByStatus(AppointmentStatus status);
-    List<Appointment> getAllByDoctorAndStatus(User doctor, AppointmentStatus status);
-    List<Appointment> getAllByPatientAndStatus(User patient, AppointmentStatus status);
+    List<Appointment> getAllByDoctorAndStatus(Doctor doctor, AppointmentStatus status);
+    List<Appointment> getAllByPatientAndStatus(Patient patient, AppointmentStatus status);
     Optional<Appointment> findById(Long id);
-    Optional<Appointment> findByIdAndPatient(Long id, User patient);
-    Optional<Appointment> findByIdAndDoctor(Long id, User doctor);
+    Optional<Appointment> findByIdAndPatient(Long id, Patient patient);
+    Optional<Appointment> findByIdAndDoctor(Long id, Doctor doctor);
 }
