@@ -1,4 +1,4 @@
-package com.devpies.devpiesback.core.rest.services;
+package com.devpies.devpiesback.core.rest.services.impl;
 
 import com.devpies.devpiesback.auth.application.domain.model.User;
 import com.devpies.devpiesback.auth.application.domain.model.roles.Doctor;

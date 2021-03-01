@@ -1,4 +1,4 @@
-package com.devpies.devpiesback.core.rest;
+package com.devpies.devpiesback.core.rest.controllers.impl;
 
 import com.devpies.devpiesback.auth.application.domain.model.User;
 import com.devpies.devpiesback.auth.application.domain.model.roles.Doctor;
@@ -6,27 +6,18 @@ import com.devpies.devpiesback.auth.application.domain.model.roles.Representativ
 import com.devpies.devpiesback.core.application.domain.dto.DoctorDTO;
 import com.devpies.devpiesback.core.application.domain.dto.HospitalDTO;
 import com.devpies.devpiesback.core.application.domain.model.Hospital;
-import com.devpies.devpiesback.core.application.domain.repository.DoctorRepository;
-import com.devpies.devpiesback.auth.application.domain.repository.RoleRepository;
-import com.devpies.devpiesback.auth.application.service.UserAuthenticationService;
-import com.devpies.devpiesback.auth.application.service.UserCrudService;
-import com.devpies.devpiesback.common.config.Roles;
 import com.devpies.devpiesback.core.application.domain.repository.HospitalRepository;
-import com.devpies.devpiesback.core.application.domain.repository.RepresentativeRepository;
-import com.devpies.devpiesback.core.rest.services.DoctorService;
-import com.devpies.devpiesback.core.rest.services.HospitalService;
-import com.devpies.devpiesback.core.rest.services.RepresentativeService;
-import lombok.NonNull;
+import com.devpies.devpiesback.core.rest.services.impl.DoctorService;
+import com.devpies.devpiesback.core.rest.services.impl.HospitalService;
+import com.devpies.devpiesback.core.rest.services.impl.RepresentativeService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
-import java.time.LocalDateTime;
+
 import java.util.List;
-import java.util.Optional;
 
 @CrossOrigin
 @RestController

@@ -9,19 +9,46 @@ import org.joda.time.DateTime;
 import java.util.List;
 
 public class AppointmentDTO {
-    User doctor;
+    Long doctorId;
     User patient;
     Long id;
     DateTime dateOfAppointment;
     List<String> symptoms;
+    List<String> bodyParts;
     AppointmentStatus status;
+    String description;
+    String questionnaire;
 
-    public User getDoctor() {
-        return doctor;
+    public Long getDoctorId() {
+        return doctorId;
     }
 
-    public void setDoctor(User doctor) {
-        this.doctor = doctor;
+    public void setDoctorId(Long doctorId) {
+        this.doctorId = doctorId;
+    }
+
+    public List<String> getBodyParts() {
+        return bodyParts;
+    }
+
+    public void setBodyParts(List<String> bodyParts) {
+        this.bodyParts = bodyParts;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public String getQuestionnaire() {
+        return questionnaire;
+    }
+
+    public void setQuestionnaire(String questionnaire) {
+        this.questionnaire = questionnaire;
     }
 
     public User getPatient() {

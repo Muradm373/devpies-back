@@ -1,4 +1,4 @@
-package com.devpies.devpiesback.core.rest;
+package com.devpies.devpiesback.core.rest.controllers.impl;
 
 import com.devpies.devpiesback.auth.application.domain.model.User;
 import com.devpies.devpiesback.auth.application.domain.model.roles.Representative;
@@ -10,7 +10,7 @@ import com.devpies.devpiesback.auth.application.domain.repository.RoleRepository
 import com.devpies.devpiesback.auth.application.service.UserAuthenticationService;
 import com.devpies.devpiesback.auth.application.service.UserCrudService;
 import com.devpies.devpiesback.common.config.Roles;
-import com.devpies.devpiesback.core.rest.services.RepresentativeService;
+import com.devpies.devpiesback.core.rest.services.impl.RepresentativeService;
 import lombok.NonNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;

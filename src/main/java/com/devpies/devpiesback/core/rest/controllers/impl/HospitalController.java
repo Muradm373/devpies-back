@@ -1,4 +1,4 @@
-package com.devpies.devpiesback.core.rest;
+package com.devpies.devpiesback.core.rest.controllers.impl;
 
 import com.devpies.devpiesback.auth.application.domain.model.User;
 import com.devpies.devpiesback.auth.application.domain.repository.RoleRepository;

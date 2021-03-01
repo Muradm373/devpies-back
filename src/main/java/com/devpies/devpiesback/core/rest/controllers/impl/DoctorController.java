@@ -1,4 +1,4 @@
-package com.devpies.devpiesback.core.rest;
+package com.devpies.devpiesback.core.rest.controllers.impl;
 
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;

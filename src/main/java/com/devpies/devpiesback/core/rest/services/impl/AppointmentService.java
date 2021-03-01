@@ -1,4 +1,4 @@
-package com.devpies.devpiesback.core.rest.services;
+package com.devpies.devpiesback.core.rest.services.impl;
 
 import com.devpies.devpiesback.auth.application.domain.model.User;
 import com.devpies.devpiesback.auth.application.domain.model.roles.Doctor;
@@ -12,11 +12,14 @@ import org.joda.time.DateTime;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.convention.MatchingStrategies;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+
+@Service
 public class AppointmentService implements IAppointmentService {
     @Autowired
     AppointmentRepository appointmentRepository;
@@ -104,7 +107,7 @@ public class AppointmentService implements IAppointmentService {
     }
 
     @Override
-    public AppointmentDTO cancelAppointment(User user, Long appointmentId, String reason) {
+    public AppointmentDTO cancelAppointment(User user, Long appointmentId) {
         Optional<Appointment> appointment = appointmentRepository.findByIdAndPatient(appointmentId, user);
 
         if (!appointment.isPresent())
@@ -112,7 +115,6 @@ public class AppointmentService implements IAppointmentService {
         else{
             Appointment cancelledAppointment = appointment.get();
             cancelledAppointment.setStatus(AppointmentStatus.CANCELLED);
-            cancelledAppointment.setRejectionDescription(reason);
             appointmentRepository.save(cancelledAppointment);
 
             return convertToAppointmentDTO(cancelledAppointment);

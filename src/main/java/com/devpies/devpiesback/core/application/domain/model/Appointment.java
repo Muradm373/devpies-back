@@ -43,7 +43,9 @@ public class Appointment {
 
     @JsonFormat(pattern="yyyy-MM-dd HH:mm")
     private DateTime dateOfAppointment;
+    @ElementCollection
     private List<String> symptoms;
+    @ElementCollection
     private List<String> bodyParts;
     private String description;
     private String questionnaire;
