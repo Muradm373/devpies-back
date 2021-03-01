@@ -3,9 +3,10 @@ package com.devpies.devpiesback.core.application.domain.model;
 import com.devpies.devpiesback.auth.application.domain.model.User;
 import com.devpies.devpiesback.auth.application.domain.model.roles.Doctor;
 import com.devpies.devpiesback.auth.application.domain.model.roles.Representative;
-import org.joda.time.DateTime;
+import com.fasterxml.jackson.annotation.JsonFormat;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Entity
@@ -23,10 +24,15 @@ public class Hospital {
             inverseJoinColumns = @JoinColumn(
                     name = "representative_id", referencedColumnName = "id"))
     private Representative representative;
-    private DateTime openTime, closeTime;
+    @JsonFormat(pattern="yyyy-MM-dd HH:mm")
+    private LocalDateTime openTime;
+    @JsonFormat(pattern="yyyy-MM-dd HH:mm")
+    private LocalDateTime closeTime;
     private String phoneNumber;
+    private String name;
     int rating;
-    String website;
+    private String website;
+    private String address;
 
     @OneToMany
     @JoinTable(
@@ -37,6 +43,38 @@ public class Hospital {
                     name = "doctor_id", referencedColumnName = "id"))
     private List<Doctor> doctors;
 
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public List<Doctor> getDoctors() {
+        return doctors;
+    }
+
+    public void setDoctors(List<Doctor> doctors) {
+        this.doctors = doctors;
+    }
+
     public Representative getRepresentative() {
         return representative;
     }
@@ -45,19 +83,19 @@ public class Hospital {
         this.representative = representative;
     }
 
-    public DateTime getOpenTime() {
+    public LocalDateTime getOpenTime() {
         return openTime;
     }
 
-    public void setOpenTime(DateTime openTime) {
+    public void setOpenTime(LocalDateTime openTime) {
         this.openTime = openTime;
     }
 
-    public DateTime getCloseTime() {
+    public LocalDateTime getCloseTime() {
         return closeTime;
     }
 
-    public void setCloseTime(DateTime closeTime) {
+    public void setCloseTime(LocalDateTime closeTime) {
         this.closeTime = closeTime;
     }
 

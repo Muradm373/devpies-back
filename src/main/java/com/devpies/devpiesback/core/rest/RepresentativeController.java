@@ -3,6 +3,8 @@ package com.devpies.devpiesback.core.rest;
 import com.devpies.devpiesback.auth.application.domain.model.User;
 import com.devpies.devpiesback.auth.application.domain.model.roles.Doctor;
 import com.devpies.devpiesback.auth.application.domain.model.roles.Representative;
+import com.devpies.devpiesback.core.application.domain.dto.DoctorDTO;
+import com.devpies.devpiesback.core.application.domain.dto.HospitalDTO;
 import com.devpies.devpiesback.core.application.domain.model.Hospital;
 import com.devpies.devpiesback.core.application.domain.repository.DoctorRepository;
 import com.devpies.devpiesback.auth.application.domain.repository.RoleRepository;
@@ -11,14 +13,18 @@ import com.devpies.devpiesback.auth.application.service.UserCrudService;
 import com.devpies.devpiesback.common.config.Roles;
 import com.devpies.devpiesback.core.application.domain.repository.HospitalRepository;
 import com.devpies.devpiesback.core.application.domain.repository.RepresentativeRepository;
+import com.devpies.devpiesback.core.rest.services.DoctorService;
+import com.devpies.devpiesback.core.rest.services.HospitalService;
+import com.devpies.devpiesback.core.rest.services.RepresentativeService;
 import lombok.NonNull;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
-
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -27,45 +33,71 @@ import java.util.Optional;
 @RequestMapping("/representative")
 public class RepresentativeController {
     @Autowired
-    RoleRepository roleRepository;
-    @NonNull
-    UserAuthenticationService authentication;
-    @Autowired
-    UserCrudService users;
-    @Autowired
-    DoctorRepository doctorRepository;
-
-    @Autowired
-    RepresentativeRepository representativeRepository;
-    @Autowired
     HospitalRepository hospitalRepository;
 
+    @Autowired
+    HospitalService hospitalService;
+    @Autowired
+    DoctorService doctorService;
+    @Autowired
+    RepresentativeService representativeService;
+
     @RequestMapping(value = "hospitals/{id}", method= RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-    ResponseEntity<Doctor> addDoctor(
+    ResponseEntity<DoctorDTO> addDoctor(
+            @AuthenticationPrincipal final User user,
             @RequestParam("username") final String username,
             @RequestParam("password") final String password,
             @PathVariable("id") final Long id,
             @RequestBody Doctor doctor){
-        User user = new User(username, username, password, roleRepository.findByName(Roles.DOCTOR.name()));
-        User savedUser = users.save(user);
-        Doctor savedDoctor = doctorRepository.save(new Doctor(doctor, savedUser));
 
-        return new ResponseEntity<>(savedDoctor, HttpStatus.OK);
+        Hospital hospital = hospitalService.getHospitalByIdAndRepresentative(id, user);
+        if(hospital == null){
+            return new ResponseEntity<>(null, HttpStatus.CONFLICT);
+        }
+
+        DoctorDTO doctorDTO = doctorService.addDoctorToHospital(doctor, hospital, username, password);
+
+        return new ResponseEntity<>(doctorDTO, HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "hospitals/{id}", method= RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    ResponseEntity<Hospital> getHospitalById(@AuthenticationPrincipal final User user,
+            @PathVariable("id") final Long id){
+        Hospital hospital = hospitalService.getHospitalByIdAndRepresentative(id, user);
+
+        return new ResponseEntity<>(hospital, HttpStatus.OK);
     }
 
 
     @RequestMapping(value = "hospitals", method= RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-    ResponseEntity<Hospital> addHospital(@AuthenticationPrincipal final User user,
-            @RequestBody Hospital hospital){
-        Representative representative = representativeRepository.findByUser(user).get();
+    ResponseEntity<HospitalDTO> addHospital(@AuthenticationPrincipal final User user,
+            @RequestBody Hospital hospital ){
+        Representative representative = representativeService.findByUser(user);
         hospital.setRepresentative(representative);
         Hospital savedHospital = hospitalRepository.save(hospital);
-        return new ResponseEntity<>(savedHospital, HttpStatus.OK);
+        return new ResponseEntity<>(hospitalService.getHospitalDTO(savedHospital.getId()), HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "hospitals/{id}", method= RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
+    ResponseEntity<HospitalDTO> editHospital(@AuthenticationPrincipal final User user,
+                                            @RequestBody Hospital hospital, @PathVariable("id") final Long id ){
+        HospitalDTO updatedHospital = hospitalService.updateHospitalByRepresentativeAndId(id, hospital,user);
+        if(updatedHospital == null)
+            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(updatedHospital, HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "hospitals/{id}", method= RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
+    ResponseEntity<String> removeHospital(@AuthenticationPrincipal final User user, @PathVariable("id") final Long id ){
+        Boolean deletedHospital = hospitalService.deleteHospitalByIdAndRepresentative(id,user);
+        if(!deletedHospital)
+            return new ResponseEntity<>("Not deleted", HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>("Deleted", HttpStatus.OK);
     }
 
     @RequestMapping(value = "hospitals", method= RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    ResponseEntity<Optional<List<Hospital>>> getHospitals(@AuthenticationPrincipal final User user){
-        Representative representative = representativeRepository.findByUser(user).get();
-        return new ResponseEntity<>(hospitalRepository.findAllByRepresentative(representative), HttpStatus.OK);
+    ResponseEntity<List<HospitalDTO>> getHospitals(@AuthenticationPrincipal final User user){
+        Representative representative = representativeService.findByUser(user);
+        return new ResponseEntity<>(hospitalService.getAllHospitalsDTO(representative), HttpStatus.OK);
     }
 }

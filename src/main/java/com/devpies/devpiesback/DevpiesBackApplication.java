@@ -1,5 +1,6 @@
 package com.devpies.devpiesback;
 
+import org.modelmapper.ModelMapper;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
@@ -25,5 +26,11 @@ public class DevpiesBackApplication {
                 registry.addMapping("/**");
             }
         };
+    }
+
+    @Bean
+    public ModelMapper modelMapper() {
+        ModelMapper modelMapper = new ModelMapper();
+        return modelMapper;
     }
 }
