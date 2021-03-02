@@ -18,6 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -52,10 +53,16 @@ public class DoctorService implements IDoctorService {
         return convertToDoctorDTO(savedDoctor);
     }
 
+    @Override
+    public Doctor getDoctorByUser(User user) {
+        return doctorRepository.findByUser(user).get();
+    }
+
 
     @Override
     public Doctor getDoctorByIdAndRepresentative(Long id, Representative representative) {
-        return null;
+        Doctor doctor = doctorRepository.findByRepresentativeAndId(representative, id);
+        return doctor;
     }
 
     @Override
@@ -80,17 +87,40 @@ public class DoctorService implements IDoctorService {
 
     @Override
     public DoctorDTO editDoctorByIdAndRepresentative(Long id, Representative representative, Doctor updatedDoctor) {
+        Doctor doctor = doctorRepository.findByRepresentativeAndId(representative, id);
+        if(doctor == null)
+            return null;
+        doctor.setHomephone(updatedDoctor.getHomephone());
+        doctor.setPhone(updatedDoctor.getPhone());
+        doctor.setName(updatedDoctor.getName());
+        doctor.setSurname(updatedDoctor.getSurname());
+
+        doctorRepository.save(doctor);
         return null;
     }
 
     @Override
     public DoctorDTO editDoctorById(Long id, Doctor updatedDoctor) {
-        return null;
+        Optional<Doctor> doctorOpt = doctorRepository.findById(id);
+        if(doctorOpt.isPresent())
+            return null;
+        Doctor doctor = doctorOpt.get();
+        doctor.setHomephone(updatedDoctor.getHomephone());
+        doctor.setPhone(updatedDoctor.getPhone());
+        doctor.setName(updatedDoctor.getName());
+        doctor.setSurname(updatedDoctor.getSurname());
+
+        DoctorDTO doctorDTO = convertToDoctorDTO(doctorRepository.save(doctor));
+        return doctorDTO;
     }
 
     @Override
     public Boolean deleteDoctorByIdAndRepresentative(Long id, Representative representative) {
-        return null;
+        Doctor doctor = doctorRepository.findByRepresentativeAndId(representative, id);
+        if(doctor == null)
+            return false;
+        doctorRepository.delete(doctor);
+        return true;
     }
 
     @Override

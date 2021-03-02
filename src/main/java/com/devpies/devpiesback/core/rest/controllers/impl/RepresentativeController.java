@@ -92,4 +92,45 @@ public class RepresentativeController {
         return new ResponseEntity<>(hospitalService.getAllHospitalsDTO(representative), HttpStatus.OK);
     }
 
+    @RequestMapping(value = "doctors", method= RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    ResponseEntity<List<DoctorDTO>> getDoctors(@AuthenticationPrincipal final User user){
+        Representative representative = representativeService.findByUser(user);
+        if(representative == null)
+            return new ResponseEntity<>(null, HttpStatus.NO_CONTENT);
+        List<DoctorDTO> doctors = doctorService.getDoctorsByRepresentative(representative);
+        return new ResponseEntity<>(doctors, HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "doctors/{id}", method= RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    ResponseEntity<Doctor> getDoctorById(@AuthenticationPrincipal final User user,
+                                                  @PathVariable("id") final Long id ){
+        Representative representative = representativeService.findByUser(user);
+        if(representative == null)
+            return new ResponseEntity<>(null, HttpStatus.NO_CONTENT);
+        Doctor doctor = doctorService.getDoctorByIdAndRepresentative(id, representative);
+        if(representative == null)
+            return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
+        return new ResponseEntity<>(doctor, HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "doctors/{id}", method= RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
+    ResponseEntity<DoctorDTO> editDoctorById(@AuthenticationPrincipal final User user,
+                                         @PathVariable("id") final Long id, @RequestBody Doctor doctorNew ){
+        Representative representative = representativeService.findByUser(user);
+        if(representative == null)
+            return new ResponseEntity<>(null, HttpStatus.NO_CONTENT);
+        DoctorDTO result = doctorService.editDoctorByIdAndRepresentative(id, representative, doctorNew);
+        return new ResponseEntity<>(result, HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "doctors/{id}", method= RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
+    ResponseEntity<Boolean> deleteDoctorById(@AuthenticationPrincipal final User user,
+                                          @PathVariable("id") final Long id ){
+        Representative representative = representativeService.findByUser(user);
+        if(representative == null)
+            return new ResponseEntity<>(null, HttpStatus.NO_CONTENT);
+        Boolean result = doctorService.deleteDoctorByIdAndRepresentative(id, representative);
+        return new ResponseEntity<>(result, HttpStatus.OK);
+    }
+
 }

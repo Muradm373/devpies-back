@@ -1,5 +1,6 @@
 package com.devpies.devpiesback.core.rest.services.interfaces;
 
+import com.devpies.devpiesback.auth.application.domain.model.User;
 import com.devpies.devpiesback.auth.application.domain.model.roles.Doctor;
 import com.devpies.devpiesback.auth.application.domain.model.roles.Representative;
 import com.devpies.devpiesback.core.application.domain.dto.DoctorDTO;
@@ -19,5 +20,6 @@ public interface IDoctorService {
      DoctorDTO editDoctorById(Long id, Doctor updatedDoctor); //admin
      Boolean deleteDoctorByIdAndRepresentative(Long id, Representative representative);
      Boolean deleteDoctorById(Long id); //admin
+     Doctor getDoctorByUser(User user);
 
 }

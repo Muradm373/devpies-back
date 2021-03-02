@@ -1,6 +1,5 @@
 package com.devpies.devpiesback.core.rest.services.interfaces;
 
-import com.devpies.devpiesback.auth.application.domain.model.User;
 import com.devpies.devpiesback.auth.application.domain.model.roles.Doctor;
 import com.devpies.devpiesback.auth.application.domain.model.roles.Patient;
 import com.devpies.devpiesback.core.application.domain.dto.AppointmentDTO;

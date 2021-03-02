@@ -1,21 +1,29 @@
 package com.devpies.devpiesback.core.rest.controllers.impl;
 
 import com.devpies.devpiesback.auth.application.domain.model.User;
+import com.devpies.devpiesback.auth.application.domain.model.roles.Doctor;
 import com.devpies.devpiesback.auth.application.domain.model.roles.Representative;
 import com.devpies.devpiesback.auth.application.service.impl.UserService;
+import com.devpies.devpiesback.core.application.domain.dto.AppointmentDTO;
+import com.devpies.devpiesback.core.application.domain.dto.DoctorDTO;
 import com.devpies.devpiesback.core.application.domain.dto.RepresentativeDTO;
 import com.devpies.devpiesback.core.application.domain.dto.UserDTO;
+import com.devpies.devpiesback.core.application.domain.model.Appointment;
+import com.devpies.devpiesback.core.application.domain.model.AppointmentStatus;
 import com.devpies.devpiesback.core.application.domain.repository.RepresentativeRepository;
 import com.devpies.devpiesback.auth.application.domain.repository.RoleRepository;
 import com.devpies.devpiesback.auth.application.service.UserAuthenticationService;
 import com.devpies.devpiesback.auth.application.service.UserCrudService;
 import com.devpies.devpiesback.common.config.Roles;
+import com.devpies.devpiesback.core.rest.services.impl.AppointmentService;
+import com.devpies.devpiesback.core.rest.services.impl.DoctorService;
 import com.devpies.devpiesback.core.rest.services.impl.RepresentativeService;
 import lombok.NonNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -38,6 +46,11 @@ public class AdminController {
     @Autowired
     UserService userService;
 
+    @Autowired
+    AppointmentService appointmentService;
+    @Autowired
+    DoctorService doctorService;
+
     @RequestMapping(value = "representatives", method= RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     ResponseEntity<Representative> addRepresentativeUser(
             @RequestParam("username") final String username,
@@ -59,12 +72,12 @@ public class AdminController {
     }
 
     @RequestMapping(value = "representatives/{id}", method= RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    ResponseEntity<Optional<Representative>> getRepresentativeById(@PathVariable Long id){
+    ResponseEntity<Optional<Representative>> getRepresentativeById(@PathVariable("id") Long id){
         return new ResponseEntity<>(representativeRepository.findById(id), HttpStatus.OK);
     }
 
     @RequestMapping(value = "representatives/{id}", method= RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
-    ResponseEntity<Boolean> removeRepresentativeById(@PathVariable Long id){
+    ResponseEntity<Boolean> removeRepresentativeById(@PathVariable("id") Long id){
         Representative representative = representativeRepository.getOne(id);
         representativeRepository.delete(representative);
         return new ResponseEntity<>(Boolean.TRUE, HttpStatus.OK);
@@ -89,5 +102,43 @@ public class AdminController {
     ResponseEntity<List<UserDTO>> getAllUsers(){
         return new ResponseEntity<>(userService.getAllUsers(), HttpStatus.OK);
     }
+
+    @RequestMapping(value = "appointments", method= RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    ResponseEntity<List<AppointmentDTO>> getAppointments(@AuthenticationPrincipal final User user){
+        return new ResponseEntity<>(appointmentService.getListOfAllAppointments(), HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "appointments/status", method= RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    ResponseEntity<List<AppointmentDTO>> getAppointmentsByStatus(@AuthenticationPrincipal final User user,
+                                                                 @RequestParam("status") String status){
+        return new ResponseEntity<>(appointmentService.getListOfAllAppointmentsByStatus(AppointmentStatus.decode(status)), HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "appointments/{id}", method= RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    ResponseEntity<Appointment> getAppointmentsById(@AuthenticationPrincipal final User user,
+                                                        @PathVariable("id") final Long id){
+        return new ResponseEntity<>(appointmentService.getAppointmentById(id), HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "doctors", method= RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    ResponseEntity<List<DoctorDTO>> getAllDoctors(@AuthenticationPrincipal final User user){
+        return new ResponseEntity<>(doctorService.getAllDoctorsDTO(), HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "doctors/{id}", method= RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
+    ResponseEntity<DoctorDTO> editDoctorById(@AuthenticationPrincipal final User user,
+                                             @PathVariable("id") final Long id, @RequestBody Doctor doctorNew ){
+        DoctorDTO result = doctorService.editDoctorById(id, doctorNew);
+        return new ResponseEntity<>(result, HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "doctors/{id}", method= RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
+    ResponseEntity<Boolean> deleteDoctorById(@AuthenticationPrincipal final User user,
+                                             @PathVariable("id") final Long id ){
+        Boolean result = doctorService.deleteDoctorById(id);
+        return new ResponseEntity<>(result, HttpStatus.OK);
+    }
+
+
 
 }
