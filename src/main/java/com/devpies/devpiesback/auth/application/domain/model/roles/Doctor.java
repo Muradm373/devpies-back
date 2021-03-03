@@ -3,6 +3,7 @@ package com.devpies.devpiesback.auth.application.domain.model.roles;
 import com.devpies.devpiesback.auth.application.domain.model.User;
 import com.devpies.devpiesback.core.application.domain.model.Appointment;
 import com.devpies.devpiesback.core.application.domain.model.Hospital;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 
@@ -60,6 +61,7 @@ public class Doctor {
         this.phone = doctor.phone;
         this.homephone = doctor.homephone;
         this.name = doctor.name;
+        this.hospital = doctor.hospital;
         this.surname = doctor.surname;
         this.user = user;
     }
@@ -112,6 +114,7 @@ public class Doctor {
         this.user = user;
     }
 
+    @JsonBackReference
     public Hospital getHospital() {
         return hospital;
     }

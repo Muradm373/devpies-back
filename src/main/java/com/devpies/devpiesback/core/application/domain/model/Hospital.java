@@ -4,6 +4,7 @@ import com.devpies.devpiesback.auth.application.domain.model.User;
 import com.devpies.devpiesback.auth.application.domain.model.roles.Doctor;
 import com.devpies.devpiesback.auth.application.domain.model.roles.Representative;
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -67,6 +68,7 @@ public class Hospital {
         this.name = name;
     }
 
+    @JsonManagedReference
     public List<Doctor> getDoctors() {
         return doctors;
     }
