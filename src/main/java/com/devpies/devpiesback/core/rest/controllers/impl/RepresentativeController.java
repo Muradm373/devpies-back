@@ -2,6 +2,7 @@ package com.devpies.devpiesback.core.rest.controllers.impl;
 
 import com.devpies.devpiesback.auth.application.domain.model.User;
 import com.devpies.devpiesback.auth.application.domain.model.roles.Doctor;
+import com.devpies.devpiesback.auth.application.domain.model.roles.Patient;
 import com.devpies.devpiesback.auth.application.domain.model.roles.Representative;
 import com.devpies.devpiesback.core.application.domain.dto.DoctorDTO;
 import com.devpies.devpiesback.core.application.domain.dto.HospitalDTO;
@@ -132,5 +133,21 @@ public class RepresentativeController {
         Boolean result = doctorService.deleteDoctorByIdAndRepresentative(id, representative);
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
+
+    @RequestMapping(value = "profile", method= RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
+    ResponseEntity<Boolean> deleteRepresentative(@AuthenticationPrincipal final User user){
+        return new ResponseEntity<>(representativeService.deleteRepresentative(user), HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "profile", method= RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
+    ResponseEntity<Boolean> editRepresentative(@AuthenticationPrincipal final User user,@RequestBody Representative representative){
+        return new ResponseEntity<>(representativeService.editRepresentative(user, representative), HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "profile", method= RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    ResponseEntity<Representative> getRepresentativeInfo(@AuthenticationPrincipal final User user){
+        return new ResponseEntity<>(representativeService.getRepresentativeByUser(user), HttpStatus.OK);
+    }
+
 
 }

@@ -1,4 +1,4 @@
-package com.devpies.devpiesback.auth.application.service;
+package com.devpies.devpiesback.auth.application.service.interfaces;
 
 import java.util.Map;
 

@@ -2,6 +2,7 @@ package com.devpies.devpiesback.core.rest.controllers.impl;
 
 import com.devpies.devpiesback.auth.application.domain.model.User;
 import com.devpies.devpiesback.auth.application.domain.model.roles.Doctor;
+import com.devpies.devpiesback.auth.application.domain.model.roles.Patient;
 import com.devpies.devpiesback.auth.application.domain.model.roles.Representative;
 import com.devpies.devpiesback.core.application.domain.dto.AppointmentDTO;
 import com.devpies.devpiesback.core.application.domain.model.Appointment;
@@ -90,6 +91,22 @@ public class DoctorController {
         AppointmentDTO appointment = appointmentService.endAppointment(doctor, id, result);
         return new ResponseEntity<>(appointment, HttpStatus.OK);
     }
+
+    @RequestMapping(value = "profile", method= RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
+    ResponseEntity<Boolean> deleteDoctor(@AuthenticationPrincipal final User user){
+        return new ResponseEntity<>(doctorService.deleteDoctor(user), HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "profile", method= RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
+    ResponseEntity<Boolean> editDoctor(@AuthenticationPrincipal final User user,@RequestBody Doctor doctor){
+        return new ResponseEntity<>(doctorService.editDoctor(user, doctor), HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "profile", method= RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    ResponseEntity<Doctor> getDoctorInfo(@AuthenticationPrincipal final User user){
+        return new ResponseEntity<>(doctorService.getDoctorByUser(user), HttpStatus.OK);
+    }
+
 
 
 

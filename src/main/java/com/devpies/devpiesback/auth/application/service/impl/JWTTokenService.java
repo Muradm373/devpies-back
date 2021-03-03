@@ -1,7 +1,7 @@
 package com.devpies.devpiesback.auth.application.service.impl;
 
-import com.devpies.devpiesback.auth.application.service.DateService;
-import com.devpies.devpiesback.auth.application.service.TokenService;
+import com.devpies.devpiesback.auth.application.service.interfaces.DateService;
+import com.devpies.devpiesback.auth.application.service.interfaces.TokenService;
 import com.google.common.collect.ImmutableMap;
 import io.jsonwebtoken.Clock;
 import io.jsonwebtoken.Claims;
@@ -16,7 +16,6 @@ import org.springframework.beans.factory.annotation.Value;
 
 import static io.jsonwebtoken.impl.TextCodec.BASE64;
 import static java.util.Objects.requireNonNull;
-import static lombok.AccessLevel.PRIVATE;
 import static org.apache.commons.lang3.StringUtils.substringBeforeLast;
 import static io.jsonwebtoken.SignatureAlgorithm.HS256;
 import java.util.Date;
@@ -24,7 +23,6 @@ import java.util.Map;
 import java.util.function.Supplier;
 
 import static java.util.Objects.requireNonNull;
-import static lombok.AccessLevel.PRIVATE;
 
 
 @Service

@@ -21,5 +21,7 @@ public interface IDoctorService {
      Boolean deleteDoctorByIdAndRepresentative(Long id, Representative representative);
      Boolean deleteDoctorById(Long id); //admin
      Doctor getDoctorByUser(User user);
+     Boolean deleteDoctor(User user);
+     Boolean editDoctor(User user, Doctor doctor);
 
 }

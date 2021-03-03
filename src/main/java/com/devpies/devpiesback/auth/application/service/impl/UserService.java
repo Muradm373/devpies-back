@@ -2,7 +2,7 @@ package com.devpies.devpiesback.auth.application.service.impl;
 
 import com.devpies.devpiesback.auth.application.domain.model.User;
 import com.devpies.devpiesback.auth.application.domain.repository.UserRepository;
-import com.devpies.devpiesback.auth.application.service.UserCrudService;
+import com.devpies.devpiesback.auth.application.service.interfaces.UserCrudService;
 import com.devpies.devpiesback.core.application.domain.dto.UserDTO;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.convention.MatchingStrategies;
@@ -52,5 +52,11 @@ public class UserService implements UserCrudService {
         UserDTO userDTO = modelMapper.map(user, UserDTO.class);
 
         return userDTO;
+    }
+
+    @Override
+    public Boolean deleteUser(User user) {
+        userRepository.delete(user);
+        return true;
     }
 }

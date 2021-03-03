@@ -2,8 +2,8 @@ package com.devpies.devpiesback.core.rest.controllers.impl;
 
 import com.devpies.devpiesback.auth.application.domain.model.User;
 import com.devpies.devpiesback.auth.application.domain.repository.RoleRepository;
-import com.devpies.devpiesback.auth.application.service.UserAuthenticationService;
-import com.devpies.devpiesback.auth.application.service.UserCrudService;
+import com.devpies.devpiesback.auth.application.service.interfaces.UserAuthenticationService;
+import com.devpies.devpiesback.auth.application.service.interfaces.UserCrudService;
 import lombok.NonNull;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;

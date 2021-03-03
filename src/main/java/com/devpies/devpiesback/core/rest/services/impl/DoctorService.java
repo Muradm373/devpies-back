@@ -4,10 +4,9 @@ import com.devpies.devpiesback.auth.application.domain.model.User;
 import com.devpies.devpiesback.auth.application.domain.model.roles.Doctor;
 import com.devpies.devpiesback.auth.application.domain.model.roles.Representative;
 import com.devpies.devpiesback.auth.application.domain.repository.RoleRepository;
-import com.devpies.devpiesback.auth.application.service.UserCrudService;
+import com.devpies.devpiesback.auth.application.service.interfaces.UserCrudService;
 import com.devpies.devpiesback.common.config.Roles;
 import com.devpies.devpiesback.core.application.domain.dto.DoctorDTO;
-import com.devpies.devpiesback.core.application.domain.dto.RepresentativeDTO;
 import com.devpies.devpiesback.core.application.domain.model.Hospital;
 import com.devpies.devpiesback.core.application.domain.repository.DoctorRepository;
 import com.devpies.devpiesback.core.application.domain.repository.HospitalRepository;
@@ -33,6 +32,8 @@ public class DoctorService implements IDoctorService {
     RoleRepository roleRepository;
     @Autowired
     HospitalRepository hospitalRepository;
+    @Autowired
+    UserCrudService userCrudService;
 
     @Override
     public List<DoctorDTO> getAllDoctorsDTO(){
@@ -45,6 +46,7 @@ public class DoctorService implements IDoctorService {
     public DoctorDTO addDoctorToHospital(Doctor doctor, Hospital hospital, String username, String password){
         User user = new User(username, username, password, roleRepository.findByName(Roles.DOCTOR.name()));
         User savedUser = users.save(user);
+        doctor.setHospital(hospital);
         Doctor savedDoctor = doctorRepository.save(new Doctor(doctor, savedUser));
 
         hospital.getDoctors().add(savedDoctor);
@@ -135,4 +137,39 @@ public class DoctorService implements IDoctorService {
 
         return doctorDTO;
     }
+
+    @Override
+    public Boolean deleteDoctor(User user) {
+        Optional<User> fUser = userCrudService.find(user.getId());
+        if(!fUser.isPresent())
+            return false;
+        Optional<Doctor> doctorOptional = doctorRepository.findByUser(fUser.get());
+        if(!doctorOptional.isPresent())
+            return false;
+
+        Doctor doctor = doctorOptional.get();
+        doctorRepository.delete(doctor);
+        return true;
+    }
+
+    @Override
+    public Boolean editDoctor(User user, Doctor updatedDoctor) {
+        Optional<User> fUser = userCrudService.find(user.getId());
+        if(!fUser.isPresent())
+            return false;
+        Optional<Doctor> doctorOpt = doctorRepository.findByUser(fUser.get());
+        if(!doctorOpt.isPresent())
+            return false;
+
+        Doctor doctor = doctorOpt.get();
+        doctor.setHomephone(updatedDoctor.getHomephone());
+        doctor.setPhone(updatedDoctor.getPhone());
+        doctor.setName(updatedDoctor.getName());
+        doctor.setSurname(updatedDoctor.getSurname());
+
+        doctorRepository.save(doctor);
+
+        return true;
+    }
+
 }

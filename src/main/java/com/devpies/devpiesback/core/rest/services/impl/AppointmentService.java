@@ -12,7 +12,11 @@ import com.devpies.devpiesback.core.rest.services.interfaces.IAppointmentService
 import org.apache.tomcat.jni.Local;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.convention.MatchingStrategies;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.mail.MailException;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -23,11 +27,16 @@ import java.util.stream.Collectors;
 
 @Service
 public class AppointmentService implements IAppointmentService {
+    private static final Logger logger = LoggerFactory.getLogger(AppointmentService.class);
+
     @Autowired
     AppointmentRepository appointmentRepository;
 
     @Autowired
     private ModelMapper modelMapper;
+
+    @Autowired
+    EmailService emailService;
 
     @Override
     public List<AppointmentDTO> getListOfAllAppointments() {
@@ -104,6 +113,16 @@ public class AppointmentService implements IAppointmentService {
         Appointment appointment = new Appointment(from, to, dateTime, symptoms, bodyParts,
                 description, questionnaire, AppointmentStatus.PENDING);
 
+        try{
+            emailService.sendASynchronousMail("devpiesmedipack@gmail.com",to.getUser().getEmail(), "You have a new appointment pending.",
+                    "Please go to your account and check an appointment.");
+        }catch (MailException e) {
+            logger.error("Exception occur while send mail :");
+            return null;
+        }catch (Exception e) {
+            logger.error("Exception occur while send mail :");
+            return null;
+        }
         appointmentRepository.save(appointment);
         return convertToAppointmentDTO(appointment);
     }
@@ -111,6 +130,17 @@ public class AppointmentService implements IAppointmentService {
     @Override
     public AppointmentDTO cancelAppointment(Patient user, Long appointmentId) {
         Optional<Appointment> appointment = appointmentRepository.findByIdAndPatient(appointmentId, user);
+
+        try{
+            emailService.sendASynchronousMail("devpiesmedipack@gmail.com",appointment.get().getDoctor().getUser().getEmail(), "One of your appointments have been cancelled.",
+                    "Please go to your account and check an appointment.");
+        }catch (MailException e) {
+            logger.error("Exception occur while send mail :");
+            return null;
+        }catch (Exception e) {
+            logger.error("Exception occur while send mail :");
+            return null;
+        }
 
         if (!appointment.isPresent())
             return null;
@@ -179,6 +209,7 @@ public class AppointmentService implements IAppointmentService {
         else{
             Appointment editedAppointment = appointment.get();
             editedAppointment.setDateOfAppointment(newDateTime);
+            editedAppointment.setStatus(AppointmentStatus.PENDING);
             appointmentRepository.save(editedAppointment);
 
             return convertToAppointmentDTO(editedAppointment);
@@ -196,6 +227,7 @@ public class AppointmentService implements IAppointmentService {
             editedAppointment.setSymptoms(symptoms);
             editedAppointment.setBodyParts(bodyParts);
             editedAppointment.setDescription(description);
+            editedAppointment.setStatus(AppointmentStatus.PENDING);
             appointmentRepository.save(editedAppointment);
 
             return convertToAppointmentDTO(editedAppointment);

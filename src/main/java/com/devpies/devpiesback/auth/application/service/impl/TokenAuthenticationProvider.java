@@ -1,6 +1,6 @@
 package com.devpies.devpiesback.auth.application.service.impl;
 
-import com.devpies.devpiesback.auth.application.service.UserAuthenticationService;
+import com.devpies.devpiesback.auth.application.service.interfaces.UserAuthenticationService;
 import lombok.AllArgsConstructor;
 import lombok.NonNull;
 import lombok.experimental.FieldDefaults;
@@ -11,8 +11,6 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Component;
 
 import java.util.Optional;
-
-import static lombok.AccessLevel.*;
 
 @Component
 @AllArgsConstructor

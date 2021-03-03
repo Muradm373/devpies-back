@@ -1,7 +1,7 @@
 package com.devpies.devpiesback.auth.application.service.impl;
 
 
-import com.devpies.devpiesback.auth.application.service.DateService;
+import com.devpies.devpiesback.auth.application.service.interfaces.DateService;
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
 

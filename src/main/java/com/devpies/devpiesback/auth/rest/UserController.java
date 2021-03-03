@@ -1,13 +1,10 @@
 package com.devpies.devpiesback.auth.rest;
 
 
-import com.devpies.devpiesback.auth.application.domain.model.Privilege;
-import com.devpies.devpiesback.auth.application.domain.model.Role;
 import com.devpies.devpiesback.auth.application.domain.model.roles.Patient;
-import com.devpies.devpiesback.auth.application.domain.model.roles.Representative;
 import com.devpies.devpiesback.auth.application.domain.repository.RoleRepository;
-import com.devpies.devpiesback.auth.application.service.UserAuthenticationService;
-import com.devpies.devpiesback.auth.application.service.UserCrudService;
+import com.devpies.devpiesback.auth.application.service.interfaces.UserAuthenticationService;
+import com.devpies.devpiesback.auth.application.service.interfaces.UserCrudService;
 import com.devpies.devpiesback.auth.application.domain.model.User;
 import com.devpies.devpiesback.common.config.Roles;
 import com.devpies.devpiesback.core.application.domain.repository.PatientRepository;
@@ -15,16 +12,9 @@ import lombok.AllArgsConstructor;
 import lombok.NonNull;
 import lombok.experimental.FieldDefaults;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.MediaType;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
 
 import static lombok.AccessLevel.PACKAGE;
 

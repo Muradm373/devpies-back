@@ -3,9 +3,10 @@ package com.devpies.devpiesback.core.rest.controllers.impl;
 import com.devpies.devpiesback.auth.application.domain.model.User;
 import com.devpies.devpiesback.auth.application.domain.model.roles.Doctor;
 import com.devpies.devpiesback.auth.application.domain.model.roles.Patient;
-import com.devpies.devpiesback.auth.application.domain.model.roles.Representative;
+import com.devpies.devpiesback.auth.application.service.interfaces.UserCrudService;
 import com.devpies.devpiesback.core.application.domain.dto.AppointmentDTO;
 import com.devpies.devpiesback.core.application.domain.dto.DoctorDTO;
+import com.devpies.devpiesback.core.application.domain.dto.HospitalDTO;
 import com.devpies.devpiesback.core.application.domain.model.Appointment;
 import com.devpies.devpiesback.core.application.domain.model.AppointmentStatus;
 import com.devpies.devpiesback.core.application.domain.model.Hospital;
@@ -20,7 +21,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 
@@ -36,6 +36,8 @@ public class PatientController {
     PatientService patientService;
     @Autowired
     HospitalService hospitalService;
+    @Autowired
+    UserCrudService userCrudService;
 
     @RequestMapping(value = "appointments", method= RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     ResponseEntity<AppointmentDTO> createAppointment(@AuthenticationPrincipal final User user,@RequestBody AppointmentDTO appointment){
@@ -91,20 +93,20 @@ public class PatientController {
 
     @RequestMapping(value = "appointments/{id}", method= RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
     ResponseEntity<AppointmentDTO> changeDateOfAppointment(@AuthenticationPrincipal final User user, @PathVariable("id") final Long id,
-                                                           LocalDateTime dateTime){
+                                                           @RequestBody AppointmentDTO appointmentChanged){
         Patient patient = patientService.findPatientByUser(user);
         Appointment appointment = appointmentService.getAppointmentOfPatientById(patient, id);
         if(appointment == null)
             return new ResponseEntity<>(null, HttpStatus.CONFLICT);
 
-        AppointmentDTO appointmentDTO = appointmentService.changeDateOfAppointment(patient, id, dateTime);
+        AppointmentDTO appointmentDTO = appointmentService.changeDateOfAppointment(patient, id, appointmentChanged.getDateOfAppointment());
 
         return new ResponseEntity<>(appointmentDTO, HttpStatus.OK);
     }
 
     @RequestMapping(value = "appointments/{id}", method= RequestMethod.PATCH, produces = MediaType.APPLICATION_JSON_VALUE)
     ResponseEntity<AppointmentDTO> changeDetailsOfAppointment(@AuthenticationPrincipal final User user, @PathVariable("id") final Long id,
-                                                           Appointment appointmentChanged){
+                                                              @RequestBody Appointment appointmentChanged){
         Patient patient = patientService.findPatientByUser(user);
         Appointment appointment = appointmentService.getAppointmentOfPatientById(patient, id);
         if(appointment == null)
@@ -161,6 +163,43 @@ public class PatientController {
         DoctorDTO doctor = doctorService.getDoctorDTOById(id);
         return new ResponseEntity<>(doctor, HttpStatus.OK);
     }
+
+    @RequestMapping(value = "hospitals", method= RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    ResponseEntity<List<HospitalDTO>> getListOfHospitals(@AuthenticationPrincipal final User user){
+        Patient patient = patientService.findPatientByUser(user);
+        if(patient == null)
+            return new ResponseEntity<>(null, HttpStatus.NO_CONTENT);
+
+        List<HospitalDTO> listOfHospitals = hospitalService.getAllHospitalsDTO();
+        return new ResponseEntity<>(listOfHospitals, HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "hospitals/{id}", method= RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    ResponseEntity<Hospital> getHospitalById(@AuthenticationPrincipal final User user,
+                                            @PathVariable("id") final Long id){
+        Patient patient = patientService.findPatientByUser(user);
+        if(patient == null)
+            return new ResponseEntity<>(null, HttpStatus.NO_CONTENT);
+
+        Hospital hospital = hospitalService.getHospitalById(id);
+        return new ResponseEntity<>(hospital, HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "profile", method= RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
+    ResponseEntity<Boolean> deletePatient(@AuthenticationPrincipal final User user){
+        return new ResponseEntity<>(patientService.deletePatient(user), HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "profile", method= RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
+    ResponseEntity<Boolean> editPatient(@AuthenticationPrincipal final User user,@RequestBody Patient patient){
+        return new ResponseEntity<>(patientService.editPatient(user, patient), HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "profile", method= RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    ResponseEntity<Patient> getPatientInfo(@AuthenticationPrincipal final User user){
+        return new ResponseEntity<>(patientService.getPatientByUser(user), HttpStatus.OK);
+    }
+
 
 
 }

@@ -1,9 +1,9 @@
 package com.devpies.devpiesback.auth.application.service.impl;
 
 import com.devpies.devpiesback.auth.application.domain.model.User;
-import com.devpies.devpiesback.auth.application.service.TokenService;
-import com.devpies.devpiesback.auth.application.service.UserAuthenticationService;
-import com.devpies.devpiesback.auth.application.service.UserCrudService;
+import com.devpies.devpiesback.auth.application.service.interfaces.TokenService;
+import com.devpies.devpiesback.auth.application.service.interfaces.UserAuthenticationService;
+import com.devpies.devpiesback.auth.application.service.interfaces.UserCrudService;
 import com.google.common.collect.ImmutableMap;
 import lombok.AllArgsConstructor;
 import lombok.NonNull;

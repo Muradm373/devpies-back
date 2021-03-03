@@ -2,8 +2,8 @@ package com.devpies.devpiesback.auth.rest;
 
 import com.devpies.devpiesback.auth.application.domain.model.User;
 import com.devpies.devpiesback.auth.application.domain.repository.RoleRepository;
-import com.devpies.devpiesback.auth.application.service.UserAuthenticationService;
-import com.devpies.devpiesback.auth.application.service.UserCrudService;
+import com.devpies.devpiesback.auth.application.service.interfaces.UserAuthenticationService;
+import com.devpies.devpiesback.auth.application.service.interfaces.UserCrudService;
 import lombok.AllArgsConstructor;
 import lombok.NonNull;
 import lombok.experimental.FieldDefaults;
@@ -12,8 +12,6 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.Optional;
 
 import static lombok.AccessLevel.PACKAGE;
 

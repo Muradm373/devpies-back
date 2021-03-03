@@ -2,6 +2,7 @@ package com.devpies.devpiesback.core.rest.controllers.impl;
 
 import com.devpies.devpiesback.auth.application.domain.model.User;
 import com.devpies.devpiesback.auth.application.domain.model.roles.Doctor;
+import com.devpies.devpiesback.auth.application.domain.model.roles.Patient;
 import com.devpies.devpiesback.auth.application.domain.model.roles.Representative;
 import com.devpies.devpiesback.auth.application.service.impl.UserService;
 import com.devpies.devpiesback.core.application.domain.dto.AppointmentDTO;
@@ -10,10 +11,11 @@ import com.devpies.devpiesback.core.application.domain.dto.RepresentativeDTO;
 import com.devpies.devpiesback.core.application.domain.dto.UserDTO;
 import com.devpies.devpiesback.core.application.domain.model.Appointment;
 import com.devpies.devpiesback.core.application.domain.model.AppointmentStatus;
+import com.devpies.devpiesback.core.application.domain.repository.PatientRepository;
 import com.devpies.devpiesback.core.application.domain.repository.RepresentativeRepository;
 import com.devpies.devpiesback.auth.application.domain.repository.RoleRepository;
-import com.devpies.devpiesback.auth.application.service.UserAuthenticationService;
-import com.devpies.devpiesback.auth.application.service.UserCrudService;
+import com.devpies.devpiesback.auth.application.service.interfaces.UserAuthenticationService;
+import com.devpies.devpiesback.auth.application.service.interfaces.UserCrudService;
 import com.devpies.devpiesback.common.config.Roles;
 import com.devpies.devpiesback.core.rest.services.impl.AppointmentService;
 import com.devpies.devpiesback.core.rest.services.impl.DoctorService;
@@ -40,6 +42,8 @@ public class AdminController {
     UserCrudService users;
     @Autowired
     RepresentativeRepository representativeRepository;
+    @Autowired
+    PatientRepository patientRepository;
 
     @Autowired
     RepresentativeService representativeService;
@@ -103,6 +107,19 @@ public class AdminController {
         return new ResponseEntity<>(userService.getAllUsers(), HttpStatus.OK);
     }
 
+    @RequestMapping(value = "users/{id}", method= RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    ResponseEntity<Patient>getPatientById(@PathVariable("id") Long id){
+        Patient patient = patientRepository.getOne(id);
+        return new ResponseEntity<>(patient, HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "users/{id}", method= RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
+    ResponseEntity<Boolean> removePatientById(@PathVariable("id") Long id){
+        Patient patient = patientRepository.getOne(id);
+        patientRepository.delete(patient);
+        return new ResponseEntity<>(Boolean.TRUE, HttpStatus.OK);
+    }
+
     @RequestMapping(value = "appointments", method= RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     ResponseEntity<List<AppointmentDTO>> getAppointments(@AuthenticationPrincipal final User user){
         return new ResponseEntity<>(appointmentService.getListOfAllAppointments(), HttpStatus.OK);
@@ -123,6 +140,13 @@ public class AdminController {
     @RequestMapping(value = "doctors", method= RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     ResponseEntity<List<DoctorDTO>> getAllDoctors(@AuthenticationPrincipal final User user){
         return new ResponseEntity<>(doctorService.getAllDoctorsDTO(), HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "doctors/{id}", method= RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    ResponseEntity<Doctor> getDoctorById(@AuthenticationPrincipal final User user,
+                                             @PathVariable("id") final Long id ){
+        Doctor result = doctorService.getDoctorById(id);
+        return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
     @RequestMapping(value = "doctors/{id}", method= RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
