@@ -5,10 +5,7 @@ import com.devpies.devpiesback.auth.application.domain.model.roles.Doctor;
 import com.devpies.devpiesback.auth.application.domain.model.roles.Patient;
 import com.devpies.devpiesback.auth.application.domain.model.roles.Representative;
 import com.devpies.devpiesback.auth.application.service.impl.UserService;
-import com.devpies.devpiesback.core.application.domain.dto.AppointmentDTO;
-import com.devpies.devpiesback.core.application.domain.dto.DoctorDTO;
-import com.devpies.devpiesback.core.application.domain.dto.RepresentativeDTO;
-import com.devpies.devpiesback.core.application.domain.dto.UserDTO;
+import com.devpies.devpiesback.core.application.domain.dto.*;
 import com.devpies.devpiesback.core.application.domain.model.Appointment;
 import com.devpies.devpiesback.core.application.domain.model.AppointmentStatus;
 import com.devpies.devpiesback.core.application.domain.repository.PatientRepository;
@@ -17,9 +14,7 @@ import com.devpies.devpiesback.auth.application.domain.repository.RoleRepository
 import com.devpies.devpiesback.auth.application.service.interfaces.UserAuthenticationService;
 import com.devpies.devpiesback.auth.application.service.interfaces.UserCrudService;
 import com.devpies.devpiesback.common.config.Roles;
-import com.devpies.devpiesback.core.rest.services.impl.AppointmentService;
-import com.devpies.devpiesback.core.rest.services.impl.DoctorService;
-import com.devpies.devpiesback.core.rest.services.impl.RepresentativeService;
+import com.devpies.devpiesback.core.rest.services.impl.*;
 import lombok.NonNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -49,6 +44,10 @@ public class AdminController {
     RepresentativeService representativeService;
     @Autowired
     UserService userService;
+    @Autowired
+    PatientService patientService;
+    @Autowired
+    HospitalService hospitalService;
 
     @Autowired
     AppointmentService appointmentService;
@@ -109,13 +108,13 @@ public class AdminController {
 
     @RequestMapping(value = "users/{id}", method= RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     ResponseEntity<Patient>getPatientById(@PathVariable("id") Long id){
-        Patient patient = patientRepository.getOne(id);
+        Patient patient = patientRepository.findById(id).get();
         return new ResponseEntity<>(patient, HttpStatus.OK);
     }
 
     @RequestMapping(value = "users/{id}", method= RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
     ResponseEntity<Boolean> removePatientById(@PathVariable("id") Long id){
-        Patient patient = patientRepository.getOne(id);
+        Patient patient = patientRepository.findById(id).get();
         patientRepository.delete(patient);
         return new ResponseEntity<>(Boolean.TRUE, HttpStatus.OK);
     }
@@ -163,6 +162,25 @@ public class AdminController {
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
+    @RequestMapping(value = "doctors/page", method= RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    ResponseEntity<List<DoctorDTO>> getAllDoctorsByPage(@AuthenticationPrincipal final User user, @RequestParam("page") Integer page){
+        return new ResponseEntity<>(doctorService.getAllDoctorsByPage(page), HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "representatives/page", method= RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    ResponseEntity<List<RepresentativeDTO>> getRepresentativesByPage(@RequestParam("page") Integer page){
+        return new ResponseEntity<>(representativeService.getRepresentativesByPage(page), HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "users/page", method= RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    ResponseEntity<List<PatientDTO>> getAllUsersByPage(@AuthenticationPrincipal final User user, @RequestParam("page") Integer page){
+        return new ResponseEntity<>(patientService.getPatientByPage(page), HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "hospitals/page", method= RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    ResponseEntity<List<HospitalDTO>> getAllHospitalsByPage(@AuthenticationPrincipal final User user, @RequestParam("page") Integer page){
+        return new ResponseEntity<>(hospitalService.getAllHospitalsByPage(page), HttpStatus.OK);
+    }
 
 
 }

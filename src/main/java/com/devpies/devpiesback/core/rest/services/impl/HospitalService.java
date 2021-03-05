@@ -10,7 +10,11 @@ import com.devpies.devpiesback.core.rest.services.interfaces.IHospitalService;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.convention.MatchingStrategies;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
+
+import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 import java.util.Optional;
@@ -123,5 +127,13 @@ public class HospitalService implements IHospitalService {
         HospitalDTO hospitalDTO = modelMapper.map(hospital, HospitalDTO.class);
 
         return hospitalDTO;
+    }
+
+    @Override
+    public List<HospitalDTO> getAllHospitalsByPage(Integer page) {
+        Pageable pageable = (Pageable) PageRequest.of(page, 10);
+        Page<Hospital> hospitals = hospitalRepository.findAll(pageable);
+
+        return hospitals.stream().map(this::convertToHospitalDTO).collect(Collectors.toList());
     }
 }

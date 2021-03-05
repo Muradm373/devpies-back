@@ -7,6 +7,8 @@ import com.devpies.devpiesback.core.application.domain.dto.UserDTO;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.convention.MatchingStrategies;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -41,6 +43,15 @@ public class UserService implements UserCrudService {
     public List<UserDTO> getAllUsers(){
         return userRepository
                 .findAll()
+                .stream()
+                .map(this::convertToUserDTO)
+                .collect(Collectors.toList());
+    }
+
+    public List<UserDTO> getAllUsersByPage(Integer page){
+        Pageable pageable = (Pageable) PageRequest.of(page, 10);
+        return userRepository
+                .findAll(pageable)
                 .stream()
                 .map(this::convertToUserDTO)
                 .collect(Collectors.toList());

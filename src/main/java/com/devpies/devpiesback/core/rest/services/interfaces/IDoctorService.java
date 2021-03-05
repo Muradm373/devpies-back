@@ -6,10 +6,12 @@ import com.devpies.devpiesback.auth.application.domain.model.roles.Representativ
 import com.devpies.devpiesback.core.application.domain.dto.DoctorDTO;
 import com.devpies.devpiesback.core.application.domain.model.Hospital;
 
+import java.awt.print.Pageable;
 import java.util.List;
 
 public interface IDoctorService {
      List<DoctorDTO> getAllDoctorsDTO();
+     List<DoctorDTO> getAllDoctorsByPage(Integer page);
      DoctorDTO addDoctorToHospital(Doctor doctor, Hospital hospital, String username, String password);
      Doctor getDoctorByIdAndRepresentative(Long id, Representative representative);
      DoctorDTO getDoctorDTOById(Long id);

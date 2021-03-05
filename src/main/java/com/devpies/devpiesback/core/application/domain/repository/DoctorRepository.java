@@ -4,10 +4,13 @@ import com.devpies.devpiesback.auth.application.domain.model.User;
 import com.devpies.devpiesback.auth.application.domain.model.roles.Doctor;
 import com.devpies.devpiesback.auth.application.domain.model.roles.Representative;
 import com.devpies.devpiesback.core.application.domain.model.Hospital;
+import org.springframework.data.domain.Page;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
+
+import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 import java.util.Optional;
@@ -18,6 +21,7 @@ public interface DoctorRepository extends JpaRepository<Doctor, Long> {
     Optional<Doctor> findByUser(User user);
     Optional<Doctor> findById(Long id);
     List<Doctor> findAllByHospital(Hospital hospital);
+    Page<Doctor> findAll(Pageable pageable);
 
     @Query("FROM Doctor WHERE hospital.representative = ?1")
     List<Doctor> findAllByRepresentative(Representative representative);

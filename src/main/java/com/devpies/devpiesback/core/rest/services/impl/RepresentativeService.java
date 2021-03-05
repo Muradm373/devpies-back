@@ -7,7 +7,11 @@ import com.devpies.devpiesback.core.application.domain.dto.RepresentativeDTO;
 import com.devpies.devpiesback.core.application.domain.repository.RepresentativeRepository;
 import com.devpies.devpiesback.core.rest.services.interfaces.IRepresentativeService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
+
+import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 import java.util.Optional;
@@ -81,6 +85,13 @@ public class RepresentativeService implements IRepresentativeService {
     public Representative getRepresentativeByUser(User user) {
         Optional<Representative> representative = representativeRepository.findByUser(user);
         return representative.get();
+    }
+
+    @Override
+    public List<RepresentativeDTO> getRepresentativesByPage(Integer page) {
+        Pageable pageable = (Pageable) PageRequest.of(page, 10);
+        Page<Representative> representatives =  representativeRepository.findAll(pageable);
+        return representatives.stream().map(this::convertToRepresentativeDTO).collect(Collectors.toList());
     }
 }
 

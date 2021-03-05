@@ -6,11 +6,13 @@ import com.devpies.devpiesback.core.application.domain.dto.AppointmentDTO;
 import com.devpies.devpiesback.core.application.domain.model.Appointment;
 import com.devpies.devpiesback.core.application.domain.model.AppointmentStatus;
 
+import java.awt.print.Pageable;
 import java.time.LocalDateTime;
 import java.util.List;
 
 public interface IAppointmentService {
     List<AppointmentDTO> getListOfAllAppointments(); //admin
+    List<AppointmentDTO> getListOfAllAppointmentsByPage(Integer page); //admin
     List<AppointmentDTO> getListOfPatientsAppointments(Patient user);
     List<AppointmentDTO> getListOfDoctorsAppointments(Doctor user);
 

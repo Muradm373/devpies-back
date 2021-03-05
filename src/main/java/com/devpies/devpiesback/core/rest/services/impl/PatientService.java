@@ -2,6 +2,7 @@ package com.devpies.devpiesback.core.rest.services.impl;
 
 import com.devpies.devpiesback.auth.application.domain.model.User;
 import com.devpies.devpiesback.auth.application.domain.model.roles.Patient;
+import com.devpies.devpiesback.auth.application.domain.model.roles.Representative;
 import com.devpies.devpiesback.auth.application.service.interfaces.UserCrudService;
 import com.devpies.devpiesback.core.application.domain.dto.PatientDTO;
 import com.devpies.devpiesback.core.application.domain.repository.PatientRepository;
@@ -9,8 +10,11 @@ import com.devpies.devpiesback.core.rest.services.interfaces.IPatientService;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.convention.MatchingStrategies;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
+import org.springframework.data.domain.Pageable;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -26,7 +30,7 @@ public class PatientService implements IPatientService {
 
     public List<PatientDTO> getAllPatientsDTO(){
         return (patientRepository
-                .findAll()
+                .findAll(PageRequest.of(0, Integer.MAX_VALUE))
                 .stream()
                 .map(this::convertToPatientDTO).collect(Collectors.toList()));
     }
@@ -81,5 +85,12 @@ public class PatientService implements IPatientService {
     public Patient getPatientByUser(User user) {
         Optional<Patient> patient = patientRepository.findByUser(user);
         return patient.get();
+    }
+
+    @Override
+    public List<PatientDTO> getPatientByPage(Integer page) {
+        Pageable pageable = PageRequest.of(page, 10);
+        Page<Patient> patients = patientRepository.findAll(pageable);
+        return patients.stream().map(this::convertToPatientDTO).collect(Collectors.toList());
     }
 }

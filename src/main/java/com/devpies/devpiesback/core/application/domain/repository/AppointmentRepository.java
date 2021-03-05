@@ -1,13 +1,14 @@
 package com.devpies.devpiesback.core.application.domain.repository;
 
-import com.devpies.devpiesback.auth.application.domain.model.User;
 import com.devpies.devpiesback.auth.application.domain.model.roles.Doctor;
 import com.devpies.devpiesback.auth.application.domain.model.roles.Patient;
 import com.devpies.devpiesback.core.application.domain.model.Appointment;
 import com.devpies.devpiesback.core.application.domain.model.AppointmentStatus;
+import org.springframework.data.domain.Page;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import org.springframework.data.domain.Pageable;
 import java.util.List;
 import java.util.Optional;
 
@@ -21,4 +22,5 @@ public interface AppointmentRepository extends JpaRepository<Appointment, Long> 
     Optional<Appointment> findById(Long id);
     Optional<Appointment> findByIdAndPatient(Long id, Patient patient);
     Optional<Appointment> findByIdAndDoctor(Long id, Doctor doctor);
+    Page<Appointment> findAll(Pageable pageable);
 }

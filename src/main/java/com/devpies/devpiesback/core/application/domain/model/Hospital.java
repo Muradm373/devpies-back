@@ -31,6 +31,7 @@ public class Hospital {
     private LocalDateTime closeTime;
     private String phoneNumber;
     private String name;
+    private String lat,lng;
     int rating;
     private String website;
     private String address;
@@ -123,5 +124,21 @@ public class Hospital {
 
     public void setWebsite(String website) {
         this.website = website;
+    }
+
+    public String getLat() {
+        return lat;
+    }
+
+    public void setLat(String lat) {
+        this.lat = lat;
+    }
+
+    public String getLng() {
+        return lng;
+    }
+
+    public void setLng(String lng) {
+        this.lng = lng;
     }
 }

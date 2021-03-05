@@ -14,7 +14,11 @@ import com.devpies.devpiesback.core.rest.services.interfaces.IDoctorService;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.convention.MatchingStrategies;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
+
+import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 import java.util.Optional;
@@ -172,4 +176,11 @@ public class DoctorService implements IDoctorService {
         return true;
     }
 
+    @Override
+    public List<DoctorDTO> getAllDoctorsByPage(Integer page) {
+        Pageable pageable = (Pageable) PageRequest.of(page, 10);
+        Page<Doctor> doctors =  doctorRepository.findAll(pageable);
+
+        return doctors.stream().map(this::convertToDoctorDTO).collect(Collectors.toList());
+    }
 }

@@ -12,6 +12,7 @@ public class HospitalDTO {
     private LocalDateTime openTime, closeTime;
     private String pictureUrl;
     private String address;
+    private String lat, lng;
 
     public String getAddress() {
         return address;
@@ -19,6 +20,22 @@ public class HospitalDTO {
 
     public void setAddress(String address) {
         this.address = address;
+    }
+
+    public String getLat() {
+        return lat;
+    }
+
+    public void setLat(String lat) {
+        this.lat = lat;
+    }
+
+    public String getLng() {
+        return lng;
+    }
+
+    public void setLng(String lng) {
+        this.lng = lng;
     }
 
     public Long getId() {

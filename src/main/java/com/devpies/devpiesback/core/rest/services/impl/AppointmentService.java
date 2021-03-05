@@ -15,9 +15,13 @@ import org.modelmapper.convention.MatchingStrategies;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.mail.MailException;
 import org.springframework.stereotype.Service;
+
+import org.springframework.data.domain.Pageable;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -232,6 +236,14 @@ public class AppointmentService implements IAppointmentService {
 
             return convertToAppointmentDTO(editedAppointment);
         }
+    }
+
+    @Override
+    public List<AppointmentDTO> getListOfAllAppointmentsByPage(Integer page) {
+        Pageable pageable = (Pageable) PageRequest.of(page, 10);
+        Page<Appointment> appointments = appointmentRepository.findAll(pageable);
+
+        return appointments.stream().map(this::convertToAppointmentDTO).collect(Collectors.toList());
     }
 
     private AppointmentDTO convertToAppointmentDTO(Appointment appointment){
