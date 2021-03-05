@@ -12,4 +12,5 @@ public interface IPatientService {
     Boolean editPatient(User user, Patient patient);
     Patient getPatientByUser(User user);
     List<PatientDTO> getPatientByPage(Integer page);
+    Patient getPatientById(Long id);
 }

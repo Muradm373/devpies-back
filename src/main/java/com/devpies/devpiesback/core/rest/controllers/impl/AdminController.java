@@ -102,13 +102,13 @@ public class AdminController {
     }
 
     @RequestMapping(value = "users", method= RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    ResponseEntity<List<UserDTO>> getAllUsers(){
-        return new ResponseEntity<>(userService.getAllUsers(), HttpStatus.OK);
+    ResponseEntity<List<PatientDTO>> getAllUsers(){
+        return new ResponseEntity<>(patientService.getAllPatientsDTO(), HttpStatus.OK);
     }
 
     @RequestMapping(value = "users/{id}", method= RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     ResponseEntity<Patient>getPatientById(@PathVariable("id") Long id){
-        Patient patient = patientRepository.findById(id).get();
+        Patient patient = patientService.getPatientById(id);
         return new ResponseEntity<>(patient, HttpStatus.OK);
     }
 

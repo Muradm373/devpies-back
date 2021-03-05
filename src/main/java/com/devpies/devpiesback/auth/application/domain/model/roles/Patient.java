@@ -27,6 +27,8 @@ public class Patient {
     @Column
     private String surname;
 
+    private String country, city, zip, idNumber, birthDate;
+
     @OneToOne(cascade = CascadeType.ALL)
     @JoinTable(
             name = "user_patient",
@@ -52,6 +54,62 @@ public class Patient {
         this.surname = patient.surname;
         this.phoneNumber = patient.homePhoneNumber;
         this.user = user;
+    }
+
+    public String getBirthDate() {
+        return birthDate;
+    }
+
+    public void setBirthDate(String birthDate) {
+        this.birthDate = birthDate;
+    }
+
+    public String getCountry() {
+        return country;
+    }
+
+    public void setCountry(String country) {
+        this.country = country;
+    }
+
+    public String getCity() {
+        return city;
+    }
+
+    public void setCity(String city) {
+        this.city = city;
+    }
+
+    public String getZip() {
+        return zip;
+    }
+
+    public void setZip(String zip) {
+        this.zip = zip;
+    }
+
+    public String getIdNumber() {
+        return idNumber;
+    }
+
+    public void setIdNumber(String idNumber) {
+        this.idNumber = idNumber;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public List<Appointment> getAppointments() {
+        return appointments;
+    }
+
+    public void setAppointments(List<Appointment> appointments) {
+        this.appointments = appointments;
     }
 
     public String getPhoneNumber() {

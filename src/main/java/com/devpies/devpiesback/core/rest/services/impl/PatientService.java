@@ -40,10 +40,15 @@ public class PatientService implements IPatientService {
     }
 
     private PatientDTO convertToPatientDTO(Patient patient){
-        modelMapper.getConfiguration()
-                .setMatchingStrategy(MatchingStrategies.LOOSE);
-        PatientDTO patientDTO = modelMapper.map(patient, PatientDTO.class);
-
+        PatientDTO patientDTO = new PatientDTO();
+        patientDTO.setEmail(patient.getUser().getEmail());
+        patientDTO.setId(patient.getId());
+        patientDTO.setName(patient.getName());
+        patientDTO.setSurname(patient.getSurname());
+        patientDTO.setPhone(patient.getPhoneNumber());
+        patientDTO.setCity(patient.getCity());
+        patientDTO.setCountry(patient.getCountry());
+        patientDTO.setIdNumber(patient.getIdNumber());
         return patientDTO;
     }
 
@@ -75,6 +80,11 @@ public class PatientService implements IPatientService {
         patientUpdated.setName(patientNew.getName());
         patientUpdated.setSurname(patientNew.getSurname());
         patientUpdated.setPhoneNumber(patientNew.getPhoneNumber());
+        patientUpdated.setCity(patientNew.getCity());
+        patientUpdated.setCountry(patientNew.getCountry());
+        patientUpdated.setIdNumber(patientNew.getIdNumber());
+        patientUpdated.setBirthDate(patientNew.getBirthDate());
+        patientUpdated.setZip(patientNew.getZip());
 
         patientRepository.save(patientUpdated);
 
@@ -92,5 +102,10 @@ public class PatientService implements IPatientService {
         Pageable pageable = PageRequest.of(page, 10);
         Page<Patient> patients = patientRepository.findAll(pageable);
         return patients.stream().map(this::convertToPatientDTO).collect(Collectors.toList());
+    }
+
+    @Override
+    public Patient getPatientById(Long id) {
+        return patientRepository.findById(id).get();
     }
 }
