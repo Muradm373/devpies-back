@@ -253,4 +253,20 @@ public class AppointmentService implements IAppointmentService {
 
         return appointmentDTO;
     }
+
+    public List<AppointmentDTO> getAppointmentsByDay(LocalDateTime startDate, LocalDateTime endDate){
+        return appointmentRepository.findAllByDateOfAppointmentBetween(startDate, endDate)
+                .stream()
+                .map(this::convertToAppointmentDTO)
+                .collect(Collectors.toList());
+
+    }
+
+    public List<AppointmentDTO> getAppointmentsToday(LocalDateTime date){
+        return appointmentRepository.findAllByDateOfAppointment(date)
+                .stream()
+                .map(this::convertToAppointmentDTO)
+                .collect(Collectors.toList());
+
+    }
 }

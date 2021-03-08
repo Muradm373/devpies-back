@@ -25,5 +25,6 @@ public interface IDoctorService {
      Doctor getDoctorByUser(User user);
      Boolean deleteDoctor(User user);
      Boolean editDoctor(User user, Doctor doctor);
+     public List<DoctorDTO> getAllDoctorsByPageAndRepresentative(Integer page, User representative);
 
 }

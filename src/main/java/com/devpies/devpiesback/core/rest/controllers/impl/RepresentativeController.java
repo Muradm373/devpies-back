@@ -149,5 +149,14 @@ public class RepresentativeController {
         return new ResponseEntity<>(representativeService.getRepresentativeByUser(user), HttpStatus.OK);
     }
 
+    @RequestMapping(value = "doctors/page", method= RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    ResponseEntity<List<DoctorDTO>> getAllDoctorsByPageAndRepresentative(@AuthenticationPrincipal final User user, @RequestParam("page") Integer page){
+        return new ResponseEntity<>(doctorService.getAllDoctorsByPageAndRepresentative(page, user), HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "hospitals/page", method= RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    ResponseEntity<List<HospitalDTO>> getAllHospitalsByPageAndRepresentative(@AuthenticationPrincipal final User user, @RequestParam("page") Integer page){
+        return new ResponseEntity<>(hospitalService.getAllHospitalsByPageAndRepresentative(page, user), HttpStatus.OK);
+    }
 
 }

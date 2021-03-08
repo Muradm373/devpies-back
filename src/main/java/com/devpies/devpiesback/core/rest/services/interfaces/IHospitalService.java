@@ -19,5 +19,7 @@ public interface IHospitalService {
     public Boolean deleteHospitalById(Long id);
     public HospitalDTO updateHospitalById(Long id, Hospital hospital);
     public Hospital getHospitalById(Long id);
+    public Hospital setHospitalById(Long id, Hospital hospital);
+    public List<HospitalDTO> getAllHospitalsByPageAndRepresentative(Integer page, User user);
 
 }

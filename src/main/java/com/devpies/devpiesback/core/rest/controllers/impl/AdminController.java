@@ -8,6 +8,7 @@ import com.devpies.devpiesback.auth.application.service.impl.UserService;
 import com.devpies.devpiesback.core.application.domain.dto.*;
 import com.devpies.devpiesback.core.application.domain.model.Appointment;
 import com.devpies.devpiesback.core.application.domain.model.AppointmentStatus;
+import com.devpies.devpiesback.core.application.domain.model.Hospital;
 import com.devpies.devpiesback.core.application.domain.repository.PatientRepository;
 import com.devpies.devpiesback.core.application.domain.repository.RepresentativeRepository;
 import com.devpies.devpiesback.auth.application.domain.repository.RoleRepository;
@@ -112,6 +113,12 @@ public class AdminController {
         return new ResponseEntity<>(patient, HttpStatus.OK);
     }
 
+    @RequestMapping(value = "users/{id}", method= RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
+    ResponseEntity<Boolean>editPatientById(@PathVariable("id") Long id, @RequestBody Patient patientNew){
+        Boolean result = patientService.editPatient(id, patientNew);
+        return new ResponseEntity<>(result, HttpStatus.OK);
+    }
+
     @RequestMapping(value = "users/{id}", method= RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
     ResponseEntity<Boolean> removePatientById(@PathVariable("id") Long id){
         Patient patient = patientRepository.findById(id).get();
@@ -180,6 +187,18 @@ public class AdminController {
     @RequestMapping(value = "hospitals/page", method= RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     ResponseEntity<List<HospitalDTO>> getAllHospitalsByPage(@AuthenticationPrincipal final User user, @RequestParam("page") Integer page){
         return new ResponseEntity<>(hospitalService.getAllHospitalsByPage(page), HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "hospitals/{id}", method= RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    ResponseEntity<Hospital>getHospitalById(@PathVariable("id") Long id){
+        Hospital hospital = hospitalService.getHospitalById(id);
+        return new ResponseEntity<>(hospital, HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "hospitals/{id}", method= RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
+    ResponseEntity<Hospital>editHospitalById(@PathVariable("id") Long id, @RequestBody Hospital hospital){
+        Hospital hospitalNew = hospitalService.setHospitalById(id, hospital);
+        return new ResponseEntity<>(hospitalNew, HttpStatus.OK);
     }
 
 

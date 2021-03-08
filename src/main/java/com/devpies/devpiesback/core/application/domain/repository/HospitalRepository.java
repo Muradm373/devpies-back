@@ -14,7 +14,7 @@ import java.util.Optional;
 @Repository
 public interface HospitalRepository extends JpaRepository<Hospital, Long> {
     Optional<Hospital> findById(Long id);
-    Optional<List<Hospital>> findAllByRepresentative(Representative representative);
     Optional<Hospital> findByIdAndRepresentative(Long id, Representative representative);
     Page<Hospital> findAll(Pageable pageable);
+    Page<Hospital> findAllByRepresentative(Representative representative, Pageable pageable);
 }

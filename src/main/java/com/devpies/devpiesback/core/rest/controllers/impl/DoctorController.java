@@ -17,6 +17,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @CrossOrigin
@@ -47,6 +48,27 @@ public class DoctorController {
         if(doctor == null)
             return new ResponseEntity<>(null, HttpStatus.NO_CONTENT);
         List<AppointmentDTO> appointments = appointmentService.getListOfDoctorsAppointmentsByStatus(doctor, AppointmentStatus.decode(status));
+        return new ResponseEntity<>(appointments, HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "appointments/date", method= RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    ResponseEntity<List<AppointmentDTO>> getAppointmentsByDate(@AuthenticationPrincipal final User user,
+                                                                 @RequestParam("start")LocalDateTime start){
+        LocalDateTime end = start.plusDays(7);
+        Doctor doctor = doctorService.getDoctorByUser(user);
+        if(doctor == null)
+            return new ResponseEntity<>(null, HttpStatus.NO_CONTENT);
+        List<AppointmentDTO> appointments = appointmentService.getAppointmentsByDay(start, end);
+        return new ResponseEntity<>(appointments, HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "appointments/today", method= RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    ResponseEntity<List<AppointmentDTO>> getAppointmentsToday(@AuthenticationPrincipal final User user,
+                                                               @RequestParam("date")LocalDateTime date){
+        Doctor doctor = doctorService.getDoctorByUser(user);
+        if(doctor == null)
+            return new ResponseEntity<>(null, HttpStatus.NO_CONTENT);
+        List<AppointmentDTO> appointments = appointmentService.getAppointmentsToday(date);
         return new ResponseEntity<>(appointments, HttpStatus.OK);
     }
 

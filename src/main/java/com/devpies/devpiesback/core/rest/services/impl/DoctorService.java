@@ -10,6 +10,7 @@ import com.devpies.devpiesback.core.application.domain.dto.DoctorDTO;
 import com.devpies.devpiesback.core.application.domain.model.Hospital;
 import com.devpies.devpiesback.core.application.domain.repository.DoctorRepository;
 import com.devpies.devpiesback.core.application.domain.repository.HospitalRepository;
+import com.devpies.devpiesback.core.application.domain.repository.RepresentativeRepository;
 import com.devpies.devpiesback.core.rest.services.interfaces.IDoctorService;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.convention.MatchingStrategies;
@@ -38,6 +39,8 @@ public class DoctorService implements IDoctorService {
     HospitalRepository hospitalRepository;
     @Autowired
     UserCrudService userCrudService;
+    @Autowired
+    RepresentativeRepository representativeRepository;
 
     @Override
     public List<DoctorDTO> getAllDoctorsDTO(){
@@ -180,6 +183,15 @@ public class DoctorService implements IDoctorService {
     public List<DoctorDTO> getAllDoctorsByPage(Integer page) {
         Pageable pageable = (Pageable) PageRequest.of(page, 10);
         Page<Doctor> doctors =  doctorRepository.findAll(pageable);
+
+        return doctors.stream().map(this::convertToDoctorDTO).collect(Collectors.toList());
+    }
+
+    @Override
+    public List<DoctorDTO> getAllDoctorsByPageAndRepresentative(Integer page, User user) {
+        Representative representative = representativeRepository.findByUser(user).get();
+        Pageable pageable = (Pageable) PageRequest.of(page, 10);
+        List<Doctor> doctors =  doctorRepository.findAllByRepresentativePageable(representative);
 
         return doctors.stream().map(this::convertToDoctorDTO).collect(Collectors.toList());
     }

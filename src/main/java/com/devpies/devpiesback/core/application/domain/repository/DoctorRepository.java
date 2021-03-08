@@ -26,6 +26,9 @@ public interface DoctorRepository extends JpaRepository<Doctor, Long> {
     @Query("FROM Doctor WHERE hospital.representative = ?1")
     List<Doctor> findAllByRepresentative(Representative representative);
 
+    @Query("FROM Doctor WHERE hospital.representative = ?1")
+    List<Doctor> findAllByRepresentativePageable(Representative representative);
+
     @Query("SELECT doc FROM Doctor doc WHERE doc.hospital.representative = ?1 and  doc.id = ?2")
     Doctor findByRepresentativeAndId(@Param("representative")Representative representative, @Param("id") Long id);
 }

@@ -32,9 +32,8 @@ public class HospitalService implements IHospitalService {
     @Override
     public List<HospitalDTO> getAllHospitalsDTO(Representative representative){
         return (hospitalRepository
-                .findAllByRepresentative(representative)
+                .findAllByRepresentative(representative, (Pageable)PageRequest.of(0, Integer.MAX_VALUE))
                 .get()
-                .stream()
                 .map(this::convertToHospitalDTO).collect(Collectors.toList()));
     }
 
@@ -120,6 +119,21 @@ public class HospitalService implements IHospitalService {
         return (hospitalRepository.findById(id).get());
     }
 
+    @Override
+    public Hospital setHospitalById(Long id, Hospital hospital){
+        Hospital hospitalNew = hospitalRepository.getOne(hospital.getId());
+        hospitalNew.setName(hospital.getName());
+        hospitalNew.setAddress(hospital.getAddress());
+        hospitalNew.setWebsite(hospital.getWebsite());
+        hospitalNew.setOpenTime(hospital.getOpenTime());
+        hospitalNew.setCloseTime(hospital.getCloseTime());
+        hospitalNew.setRepresentative(hospital.getRepresentative());
+        hospitalNew.setLat(hospital.getLat());
+        hospitalNew.setLng(hospital.getLng());
+        hospitalRepository.save(hospitalNew);
+        return (hospitalNew);
+    }
+
     private HospitalDTO convertToHospitalDTO(Hospital hospital){
         modelMapper.getConfiguration()
                 .setMatchingStrategy(MatchingStrategies.LOOSE);
@@ -133,6 +147,16 @@ public class HospitalService implements IHospitalService {
     public List<HospitalDTO> getAllHospitalsByPage(Integer page) {
         Pageable pageable = (Pageable) PageRequest.of(page, 10);
         Page<Hospital> hospitals = hospitalRepository.findAll(pageable);
+
+        return hospitals.stream().map(this::convertToHospitalDTO).collect(Collectors.toList());
+    }
+
+    @Override
+    public List<HospitalDTO> getAllHospitalsByPageAndRepresentative(Integer page, User user) {
+
+        Representative representative = representativeRepository.findByUser(user).get();
+        Pageable pageable = (Pageable) PageRequest.of(page, 10);
+        Page<Hospital> hospitals = hospitalRepository.findAllByRepresentative(representative, pageable);
 
         return hospitals.stream().map(this::convertToHospitalDTO).collect(Collectors.toList());
     }

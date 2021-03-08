@@ -91,6 +91,27 @@ public class PatientService implements IPatientService {
         return true;
     }
 
+    public Boolean editPatient(Long id, Patient patientNew) {
+        Optional<Patient> patient = patientRepository.findById(id);
+        if(!patient.isPresent())
+            return false;
+
+        Patient patientUpdated = patient.get();
+        patientUpdated.setHomePhoneNumber(patientNew.getHomePhoneNumber());
+        patientUpdated.setName(patientNew.getName());
+        patientUpdated.setSurname(patientNew.getSurname());
+        patientUpdated.setPhoneNumber(patientNew.getPhoneNumber());
+        patientUpdated.setCity(patientNew.getCity());
+        patientUpdated.setCountry(patientNew.getCountry());
+        patientUpdated.setIdNumber(patientNew.getIdNumber());
+        patientUpdated.setBirthDate(patientNew.getBirthDate());
+        patientUpdated.setZip(patientNew.getZip());
+
+        patientRepository.save(patientUpdated);
+
+        return true;
+    }
+
     @Override
     public Patient getPatientByUser(User user) {
         Optional<Patient> patient = patientRepository.findByUser(user);
