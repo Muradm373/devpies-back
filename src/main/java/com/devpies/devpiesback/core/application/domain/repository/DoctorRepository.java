@@ -20,8 +20,8 @@ import java.util.Optional;
 public interface DoctorRepository extends JpaRepository<Doctor, Long> {
     Optional<Doctor> findByUser(User user);
     Optional<Doctor> findById(Long id);
-    List<Doctor> findAllByHospital(Hospital hospital);
     Page<Doctor> findAll(Pageable pageable);
+    Page<Doctor> findAllByHospital(Hospital hospital, Pageable pageable);
 
     @Query("FROM Doctor WHERE hospital.representative = ?1")
     List<Doctor> findAllByRepresentative(Representative representative);

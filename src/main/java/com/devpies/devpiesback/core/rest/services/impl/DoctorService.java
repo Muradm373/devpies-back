@@ -86,7 +86,8 @@ public class DoctorService implements IDoctorService {
 
     @Override
     public List<DoctorDTO> getDoctorsByHospital(Hospital hospital) {
-        return doctorRepository.findAllByHospital(hospital).stream().map(this::convertToDoctorDTO).collect(Collectors.toList());
+        Pageable pageable = (Pageable) PageRequest.of(0, Integer.MAX_VALUE);
+        return doctorRepository.findAllByHospital(hospital, pageable).stream().map(this::convertToDoctorDTO).collect(Collectors.toList());
     }
 
     @Override
@@ -183,6 +184,15 @@ public class DoctorService implements IDoctorService {
     public List<DoctorDTO> getAllDoctorsByPage(Integer page) {
         Pageable pageable = (Pageable) PageRequest.of(page, 10);
         Page<Doctor> doctors =  doctorRepository.findAll(pageable);
+
+        return doctors.stream().map(this::convertToDoctorDTO).collect(Collectors.toList());
+    }
+
+    @Override
+    public List<DoctorDTO> getAllDoctorsByPageAndHospitalId(Integer page, Long hospitalId) {
+        Hospital hospital = hospitalRepository.getOne(hospitalId);
+        Pageable pageable = (Pageable) PageRequest.of(page, 10);
+        Page<Doctor> doctors =  doctorRepository.findAllByHospital(hospital, pageable);
 
         return doctors.stream().map(this::convertToDoctorDTO).collect(Collectors.toList());
     }

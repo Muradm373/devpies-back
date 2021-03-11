@@ -139,6 +139,21 @@ public class PatientController {
         return new ResponseEntity<>(doctors, HttpStatus.OK);
     }
 
+    @RequestMapping(value = "doctors/page", method= RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    ResponseEntity<List<DoctorDTO>> getAllDoctorsByPage(@AuthenticationPrincipal final User user, @RequestParam("page") Integer page){
+        return new ResponseEntity<>(doctorService.getAllDoctorsByPage(page), HttpStatus.OK);
+    }
+    @RequestMapping(value = "hospitals/page", method= RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    ResponseEntity<List<HospitalDTO>> getAllHospitalsByPage(@AuthenticationPrincipal final User user, @RequestParam("page") Integer page){
+        return new ResponseEntity<>(hospitalService.getAllHospitalsByPage(page), HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "hospitals/doctors/page", method= RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    ResponseEntity<List<DoctorDTO>> getDoctorsByHospitalAndPage(@AuthenticationPrincipal final User user,
+                                                         @RequestParam("id") Long hospitalId, @RequestParam("page") Integer page){
+        return new ResponseEntity<>(doctorService.getAllDoctorsByPageAndHospitalId(page, hospitalId), HttpStatus.OK);
+    }
+
     @RequestMapping(value = "hospitals/doctors", method= RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     ResponseEntity<List<DoctorDTO>> getDoctorsByHospital(@AuthenticationPrincipal final User user,
                                                          @RequestParam("id") Long hospitalId){
@@ -152,6 +167,8 @@ public class PatientController {
         List<DoctorDTO> doctors = doctorService.getDoctorsByHospital(hospital);
         return new ResponseEntity<>(doctors, HttpStatus.OK);
     }
+
+
 
     @RequestMapping(value = "doctors/{id}", method= RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     ResponseEntity<DoctorDTO> getDoctorById(@AuthenticationPrincipal final User user,
